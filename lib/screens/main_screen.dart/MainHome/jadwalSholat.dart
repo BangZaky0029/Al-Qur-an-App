@@ -353,7 +353,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
           child: Text(
             "Jadwal Sholat",
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -607,16 +607,14 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
   }
 
   Widget _buildSearchResults() {
-    // Mendapatkan ukuran layar
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    // Nilai tetap untuk posisi dan ukuran container
+    double rightValue = 40.0; // Jarak tetap dari kanan
+    double leftValue = 250.0; // Jarak tetap dari kiri
+    double topValue = 300.0; // Jarak tetap dari atas
 
-    // Mengonversi 30.0 menjadi proporsional terhadap lebar layar
-    double rightValue = screenWidth * 0.12; // 15% dari lebar layar
-    double leftValue = screenWidth * 0.50; // 35% dari lebar layar
-    double topValue = screenHeight * 0.37; // 36% dari tinggi layar
-    double heightValue = screenHeight * 0.25; // 25% dari tinggi layar
-    double widthValue = screenWidth * 0.3; // 30% dari lebar layar
+    double screenHeight = MediaQuery.of(context).size.height;
+    double heightPercentage = (165 / screenHeight);
+
     return Positioned(
       top: topValue,
       left: leftValue,
@@ -624,8 +622,8 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
-            width: widthValue,
-            height: heightValue,
+            // width: widthPercentage * screenwidth,
+            height: heightPercentage * screenHeight,
             decoration: BoxDecoration(
               color: AppColors.background.withOpacity(0.9),
               borderRadius: BorderRadius.circular(12.0),
@@ -644,8 +642,9 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
                     itemBuilder: (context, index) {
                       return ListTile(
                         contentPadding: const EdgeInsets.symmetric(
-                            vertical: 0.1,
-                            horizontal: 16.0), // Jarak atas dan bawah
+                            vertical:
+                                4.0, // Mengatur jarak atas dan bawah ListTile agar lebih terlihat
+                            horizontal: 16.0),
                         title: Text(
                           filteredCities[index]["city"]!,
                           style: const TextStyle(
