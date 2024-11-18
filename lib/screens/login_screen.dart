@@ -54,29 +54,29 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // Periksa hasil respons login
     if (response["success"] == true) {
-      Flushbar(
+      await Flushbar(
         messageText: const Text(
           "Anda Berhasil Login!",
           style: TextStyle(
             color: Colors.white, // Warna teks agar kontras dengan background
             fontSize: 16,
-            // fontWeight: FontWeight.bold,
           ),
         ),
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 1),
         margin: const EdgeInsets.all(8),
         borderRadius: BorderRadius.circular(8),
         flushbarPosition: FlushbarPosition.TOP, // Muncul di atas layar
         backgroundGradient: const LinearGradient(
           colors: [
-            AppColors.textPrimary, // Warna awal gradient
-            AppColors.cardBackground, // Warna akhir gradient
+            AppColors.cardBackground, // Warna awal gradient
+            AppColors.textPrimary, // Warna akhir gradient
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
       ).show(context);
 
+      // Navigasi ke halaman berikutnya setelah Flushbar selesai
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       Flushbar(
@@ -85,7 +85,6 @@ class _LoginScreenState extends State<LoginScreen> {
           style: const TextStyle(
             color: Colors.white, // Warna teks agar kontras dengan background
             fontSize: 16,
-            // fontWeight: FontWeight.bold,
           ),
         ),
         duration: const Duration(seconds: 3),
@@ -109,7 +108,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
+        backgroundColor: AppColors.cardBackground,
       ),
       body: Center(
         child: Padding(

@@ -153,10 +153,10 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // Fungsi untuk login
   Future<Map<String, dynamic>> login(String email, String password) async {
     final url = Uri.parse('$_baseUrl/login');
     try {
+      // Kirim permintaan POST ke API login
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
@@ -166,31 +166,48 @@ class AuthProvider with ChangeNotifier {
         }),
       );
 
+      // Periksa status code respons
       if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
+        final Map<String, dynamic> responseData = json.decode(response.body);
 
-        // Validasi jika `user_id` tersedia di respons
-        if (responseData["user_id"] != null) {
-          setUserId(responseData["user_id"]);
+        // Validasi jika data penting tersedia
+        if (responseData.containsKey("user_id") &&
+            responseData["user_id"] != null) {
+          // Konversi user_id menjadi int jika diperlukan
+          int? userId = int.tryParse(responseData["user_id"].toString());
+          if (userId == null) {
+            return {
+              "success": false,
+              "message": "Invalid response: user_id is not a valid integer"
+            };
+          }
+
+          // Simpan data pengguna
+          setUserId(userId);
+          setUserEmail(responseData["email"] ?? "");
+          setUserPhoneNumber(responseData["phone_number"] ?? "");
+          setUserName(responseData["user_name"] ?? "");
+          setProfilePictureUrl(responseData["picture"] ?? "");
+
+          return {"success": true};
         } else {
-          throw Exception("user_id is null in login response");
+          return {
+            "success": false,
+            "message": "Invalid response: Missing user_id"
+          };
         }
-
-        setUserEmail(responseData["email"]);
-        setUserPhoneNumber(responseData["phone_number"] ?? "");
-        setUserName(responseData["user_name"] ?? "");
-        setProfilePictureUrl(responseData["picture"] ?? "");
-
-        return {"success": true};
       } else {
-        final errorData = json.decode(response.body);
+        // Tangani error dari server
+        final Map<String, dynamic> errorData = json.decode(response.body);
         return {
           "success": false,
-          "message": errorData['detail'] ?? "Login failed"
+          "message": errorData['detail'] ??
+              "Login failed with status: ${response.statusCode}"
         };
       }
     } catch (e) {
-      return {"success": false, "message": "Error occurred: $e"};
+      // Tangani error jaringan atau parsing
+      return {"success": false, "message": "An error occurred: $e"};
     }
   }
 

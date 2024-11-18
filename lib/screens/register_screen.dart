@@ -306,6 +306,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         title: const Text('Register'),
         automaticallyImplyLeading:
             false, // Supaya bisa kembali ke halaman sebelumnya
+        backgroundColor: AppColors.cardBackground,
       ),
       body: Center(
         child: SingleChildScrollView(

@@ -220,94 +220,113 @@ class _HadistScreenState extends State<HadistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height * 0.29,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.cardBackground, AppColors.textPrimary],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(150),
-                bottomRight: Radius.circular(150),
-              ),
-            ),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(150),
-                bottomRight: Radius.circular(150),
-              ),
-              child: Stack(
+      body: isLoading
+          ? const Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/images/masjid-2.png',
-                      width: 500,
-                      height: 500,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Positioned(
-                    top: 40.0,
-                    left: 16.0,
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                        size: 28.0,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context); // Kembali ke layar sebelumnya
-                      },
+                  CircularProgressIndicator(), // Loading circle
+                  SizedBox(height: 16), // Jarak antara circle dan teks
+                  Text(
+                    "Loading data, please wait...", // Label teks di bawah circle
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey, // Warna teks
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: _showMainHadithSelectionDialog,
-                child: const Text("Pilih Sumber Hadist",
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(width: 10),
-              if (selectedSourceName
-                  .isNotEmpty) // Tampilkan button jika ada pilihan
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.cardBackground,
-                    foregroundColor: AppColors.textPrimary,
+            )
+          : Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.29,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppColors.cardBackground, AppColors.textPrimary],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(150),
+                      bottomRight: Radius.circular(150),
+                    ),
                   ),
-                  child: Text(selectedSourceName),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(150),
+                      bottomRight: Radius.circular(150),
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Image.asset(
+                            'assets/images/masjid-2.png',
+                            width: 500,
+                            height: 500,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: 40.0,
+                          left: 16.0,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                              size: 28.0,
+                            ),
+                            onPressed: () {
+                              Navigator.pop(
+                                  context); // Kembali ke layar sebelumnya
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-            ],
-          ),
-          Expanded(
-            child: isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
-                    itemCount: filteredHadithList.length,
-                    itemBuilder: (context, index) {
-                      return _buildAnimatedCard(index);
-                    },
-                  ),
-          ),
-        ],
-      ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _showMainHadithSelectionDialog,
+                      child: const Text("Pilih Sumber Hadist",
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.textPrimary,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    const SizedBox(width: 10),
+                    if (selectedSourceName
+                        .isNotEmpty) // Tampilkan button jika ada pilihan
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.cardBackground,
+                          foregroundColor: AppColors.textPrimary,
+                        ),
+                        child: Text(selectedSourceName),
+                      ),
+                  ],
+                ),
+                Expanded(
+                  child: isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : ListView.builder(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 8.0),
+                          itemCount: filteredHadithList.length,
+                          itemBuilder: (context, index) {
+                            return _buildAnimatedCard(index);
+                          },
+                        ),
+                ),
+              ],
+            ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(

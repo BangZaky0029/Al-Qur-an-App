@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:alquran_app/screens/main_screen.dart/Kompas/compass_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/MainHome/jadwalSholat.dart';
 import 'package:alquran_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -230,6 +231,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         context,
         MaterialPageRoute(builder: (context) => PrayerScheduleScreen()),
       );
+    } else if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CompassScreen()),
+      );
     }
   }
 
@@ -260,7 +266,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () => Navigator.pop(context),
             ),
             title: const Text(
-              'Settings',
+              'Profile',
               style: TextStyle(color: Colors.white, fontSize: 24),
             ),
           ),
@@ -504,6 +510,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       bottomNavigationBar: Container(
+        height: 100, // Tinggi Container
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -517,15 +524,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Padding(
+                padding: EdgeInsets.only(
+                    top: 8), // Menyesuaikan posisi vertikal ikon
+                child: Icon(Icons.home),
+              ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.explore),
+              icon: Padding(
+                padding: EdgeInsets.only(
+                    top: 8), // Menyesuaikan posisi vertikal ikon
+                child: Icon(Icons.explore),
+              ),
               label: 'Kompas',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Padding(
+                padding: EdgeInsets.only(
+                    top: 8), // Menyesuaikan posisi vertikal ikon
+                child: Icon(Icons.person),
+              ),
               label: 'Account',
             ),
           ],

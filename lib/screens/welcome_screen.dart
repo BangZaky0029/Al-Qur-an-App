@@ -1,3 +1,4 @@
+import 'package:alquran_app/screens/main_screen.dart/MainHome/jadwalSholat.dart';
 import 'package:alquran_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
@@ -24,9 +25,9 @@ class WelcomeScreen extends StatelessWidget {
             children: [
               // Teks utama dengan tema warna hijau tua
               const Text(
-                "Hello,\nEveryone!",
+                "Assalamu'alamualaikum,\nEveryone!",
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF162644), // Warna hijau gelap
                 ),
@@ -36,9 +37,9 @@ class WelcomeScreen extends StatelessWidget {
 
               // Teks deskripsi singkat
               const Text(
-                "Selamat datang di aplikasi ini!",
+                "Sudahkah membaca Al Qur'an hari ini?",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   color: Color(0xFF537A5A),
                 ),
                 textAlign: TextAlign.center,
@@ -54,50 +55,139 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 40),
 
               // Tombol Sign In dengan warna hijau tua
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      const Color(0xFF537A5A), // Warna tombol hijau tua
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+              Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF537A5A), // Warna dasar tombol
+                      borderRadius:
+                          BorderRadius.circular(30), // Bentuk sudut tombol
+                      boxShadow: [
+                        // Inner shadow
+                        BoxShadow(
+                          color: Colors.black
+                              .withOpacity(0.5), // Warna inner shadow
+                          offset: const Offset(3, 3), // Posisi bayangan
+                          blurRadius: 6, // Blur radius
+                          spreadRadius: -4, // Spread negatif untuk inner shadow
+                        ),
+                        BoxShadow(
+                          color:
+                              Colors.white.withOpacity(0.2), // Warna highlight
+                          offset:
+                              const Offset(2, 2), // Posisi bayangan highlight
+                          blurRadius: 6, // Blur radius
+                          spreadRadius: -4, // Spread negatif untuk inner shadow
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Colors.transparent, // Background transparan
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 50, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          side: const BorderSide(
+                              color: AppColors.background, width: 3), // Outline
+                        ),
+                        elevation:
+                            0, // Hilangkan efek shadow default ElevatedButton
+                      ),
+                      onPressed: () {
+                        onWelcomeComplete(); // Set isFirstLaunch menjadi false
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PrayerScheduleScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Get Start',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  onWelcomeComplete(); // Set isFirstLaunch menjadi false
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
-                },
-                child: const Text(
-                  'Sign In',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
+                  const SizedBox(height: 100),
 
-              // Teks navigasi ke halaman Register
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegisterScreen()),
-                  );
-                },
-                child: const Text(
-                  'Create New Account',
-                  style: TextStyle(
-                    color: Color(0xFF537A5A), // Warna teks sesuai tema hijau
-                    fontSize: 16,
-                    decoration: TextDecoration.underline,
+                  // Teks navigasi ke halaman Register
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors
+                              .cardBackground, // Warna tombol hijau tua
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 130, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            side: const BorderSide(
+                              color:
+                                  AppColors.background, // Warna outline border
+                              width: 3, // Ketebalan outline border
+                            ),
+                          ),
+                          shadowColor: AppColors.textPrimary,
+                          elevation: 3,
+                        ),
+                        onPressed: () {
+                          onWelcomeComplete(); // Set isFirstLaunch menjadi false
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
+                          );
+                        },
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors
+                              .cardBackground, // Warna tombol hijau tua
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 120, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              side: const BorderSide(
+                                  color: AppColors.background, width: 3)),
+                          shadowColor: AppColors.textPrimary,
+                          elevation: 3,
+                        ),
+                        onPressed: () {
+                          onWelcomeComplete(); // Set isFirstLaunch menjadi false
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const RegisterScreen()),
+                          );
+                        },
+                        child: const Text(
+                          'Register',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                ],
               ),
             ],
           ),

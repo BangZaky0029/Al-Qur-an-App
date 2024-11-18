@@ -1,5 +1,7 @@
 import 'package:alquran_app/providers/auth_provider.dart';
+import 'package:alquran_app/screens/login_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/HOME/home_screen.dart';
+import 'package:alquran_app/screens/main_screen.dart/Kompas/compass_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/hadist/hadist_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/tasbih_screen.dart';
 import 'package:alquran_app/screens/profile_screen.dart';
@@ -10,7 +12,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 void main() {
   runApp(
@@ -41,42 +42,23 @@ class PrayerScheduleScreen extends StatefulWidget {
   _PrayerScheduleScreenState createState() => _PrayerScheduleScreenState();
 }
 
-class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
-    with SingleTickerProviderStateMixin {
+class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
   String selectedCity = "Jakarta";
   List<Map<String, String>> cities = [];
   List<dynamic> prayerTimes = [];
   bool isLoading = true;
   bool isFetching = false;
   bool isSearching = false;
-  bool isCalendarOpen = false;
   DateTime? selectedDate;
   TextEditingController searchController = TextEditingController();
   List<Map<String, String>> filteredCities = [];
   String errorMessage = "";
-
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
     loadCities();
     fetchPrayerTimes(selectedCity);
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-    _fadeAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 
   Future<void> loadCities() async {
@@ -148,24 +130,6 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
     });
   }
 
-  void _onDaySelected(DateTime day, DateTime focusedDay) {
-    setState(() {
-      selectedDate = day;
-      fetchPrayerTimes(selectedCity, date: selectedDate);
-    });
-  }
-
-  void _toggleCalendar() {
-    setState(() {
-      isCalendarOpen = !isCalendarOpen;
-      if (isCalendarOpen) {
-        _animationController.forward();
-      } else {
-        _animationController.reverse();
-      }
-    });
-  }
-
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -173,11 +137,29 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
       _selectedIndex = index;
     });
 
-    // Navigasi berdasarkan index
+    // Mendapatkan instance dari AuthProvider
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
     if (index == 2) {
+      // Icon "Account"
+      if (authProvider.userId != null) {
+        // Jika user sudah login, arahkan ke ProfileScreen
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfileScreen()),
+        );
+      } else {
+        // Jika user belum login, arahkan ke LoginScreen
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
+      }
+    } else if (index == 1) {
+      // Icon "Kompas"
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ProfileScreen()),
+        MaterialPageRoute(builder: (context) => CompassScreen()),
       );
     }
   }
@@ -191,11 +173,9 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
           Column(
             children: [
               _buildTopContainer(userName),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 6.0),
               _buildBottomContainer(),
               const SizedBox(height: 20.0),
-              // Tambahkan Kalender di bawah Container Jadwal Sholat
-              if (isCalendarOpen) _buildCalendar(),
             ],
           ),
           _buildMiddleNavigation(),
@@ -203,6 +183,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
         ],
       ),
       bottomNavigationBar: Container(
+        height: 100, // Tinggi Container
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -216,15 +197,27 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Padding(
+                padding: EdgeInsets.only(
+                    top: 8), // Menyesuaikan posisi vertikal ikon
+                child: Icon(Icons.home),
+              ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.explore),
+              icon: Padding(
+                padding: EdgeInsets.only(
+                    top: 8), // Menyesuaikan posisi vertikal ikon
+                child: Icon(Icons.explore),
+              ),
               label: 'Kompas',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Padding(
+                padding: EdgeInsets.only(
+                    top: 8), // Menyesuaikan posisi vertikal ikon
+                child: Icon(Icons.person),
+              ),
               label: 'Account',
             ),
           ],
@@ -249,7 +242,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
   Widget _buildTopContainer(String userName) {
     return Container(
       margin: const EdgeInsets.all(0.1),
-      padding: const EdgeInsets.symmetric(vertical: 90.0, horizontal: 20.0),
+      padding: const EdgeInsets.symmetric(vertical: 90.0, horizontal: 30.0),
       decoration: const BoxDecoration(
         gradient: AppTheme.gradientGreen,
         borderRadius: BorderRadius.only(
@@ -292,45 +285,27 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
 
   Widget _buildBottomContainer() {
     return Container(
-      margin: const EdgeInsets.all(16.0),
-      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+      margin: const EdgeInsets.all(30.0),
+      padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 25.0),
       decoration: const BoxDecoration(
         gradient: AppTheme.gradientGreen,
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+        border: Border.fromBorderSide(
+          BorderSide(
+            color: AppTheme.textPrimary,
+            width: 2.0,
+          ),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeaderWithSearch(),
-          // const SizedBox(height: 8.0),
-          if (selectedDate != null)
-            Container(
-              height: 30.0,
-              width: 153,
-              margin: const EdgeInsets.only(bottom: 5),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.cardBackground.withOpacity(0.9),
-                    blurRadius: 4.0,
-                    offset: const Offset(0, 0),
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Text(
-                  "${_formatDate(selectedDate!)}",
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary,
-                  ),
-                ),
-              ),
-            ),
+          const SizedBox(
+            height: 16.0,
+          ),
           _buildPrayerTimes(),
           const SizedBox(height: 16.0),
           _buildCityInfo(),
@@ -381,7 +356,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
         ),
         AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          width: isSearching ? 200.0 : 73.0,
+          width: isSearching ? 140.0 : 73.0,
           height: 37.0,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           decoration: BoxDecoration(
@@ -481,7 +456,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
 
   Widget _buildPrayerTimeItem(String label, String time, IconData icon) {
     return Container(
-      width: 80,
+      width: 60,
       alignment: Alignment.center,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -492,7 +467,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
             label,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -500,7 +475,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
           const SizedBox(height: 6),
           Icon(
             icon,
-            size: 30,
+            size: 28,
             color: Colors.white,
           ),
           const SizedBox(height: 6),
@@ -521,14 +496,18 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
   Widget _buildMiddleNavigation() {
     return Positioned(
       top: 150.0,
-      left: 16.0,
-      right: 16.0,
+      left: 30.0,
+      right: 30.0,
       child: Container(
         height: 85.0,
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
         decoration: BoxDecoration(
           color: AppTheme.textPrimary,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: AppTheme.background,
+            width: 2.0,
+          ),
           boxShadow: [
             BoxShadow(
               color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
@@ -616,9 +595,9 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
 
   Widget _buildSearchResults() {
     return Positioned(
-      top: 300,
-      left: 195,
-      right: 36,
+      top: 310,
+      left: 232,
+      right: 58,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
@@ -637,13 +616,19 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
             ),
             child: filteredCities.isNotEmpty
                 ? ListView.builder(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(1.0),
                     itemCount: filteredCities.length,
                     itemBuilder: (context, index) {
                       return ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0.1,
+                            horizontal: 16.0), // Jarak atas dan bawah
                         title: Text(
                           filteredCities[index]["city"]!,
-                          style: const TextStyle(color: Colors.black),
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 14,
+                          ),
                         ),
                         onTap: () {
                           setState(() {
@@ -701,49 +686,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen>
             ),
           ),
         ),
-        IconButton(
-          icon: const Icon(
-            Icons.edit_calendar,
-            color: Colors.white,
-          ),
-          onPressed: _toggleCalendar,
-        ),
       ],
-    );
-  }
-
-  Widget _buildCalendar() {
-    return Container(
-      margin: const EdgeInsets.all(16.0),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6.0,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: TableCalendar(
-        firstDay: DateTime.utc(2000, 1, 1),
-        lastDay: DateTime.utc(2100, 12, 31),
-        focusedDay: selectedDate ?? DateTime.now(),
-        selectedDayPredicate: (day) => isSameDay(selectedDate, day),
-        onDaySelected: _onDaySelected,
-        calendarStyle: const CalendarStyle(
-          todayDecoration: BoxDecoration(
-            color: AppTheme.textPrimary,
-            shape: BoxShape.circle,
-          ),
-          selectedDecoration: BoxDecoration(
-            color: AppTheme.cardBackground,
-            shape: BoxShape.circle,
-          ),
-        ),
-      ),
     );
   }
 }
