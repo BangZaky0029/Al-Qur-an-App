@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
 
 void main() {
   runApp(
@@ -74,6 +75,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildBottomNavigationBar(double screenWidth, BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     final isUserLoggedIn = Provider.of<AuthProvider>(context).isLoggedIn;
 
     return Container(
@@ -96,25 +98,36 @@ class _MainScreenState extends State<MainScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               for (int i = 0; i < _pages.length; i++)
-                AnimatedAlign(
-                  alignment: _selectedIndex == i
-                      ? Alignment.center
-                      : Alignment.centerLeft,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.fastOutSlowIn,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.fastOutSlowIn,
-                    width: _selectedIndex == i
-                        ? screenWidth / 6
-                        : 70, // Sesuaikan lebar agar terlihat lebih bagus
-                    height: 9,
-                    decoration: BoxDecoration(
-                      color: _selectedIndex == i
-                          ? AppColors.background
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedIndex = i;
+                    });
+                  },
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween<double>(
+                        begin: _selectedIndex == i ? 1.0 : 0.0,
+                        end: _selectedIndex == i ? 1.0 : 0.0),
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeInOut,
+                    builder: (context, value, child) {
+                      double width = 70 + (screenWidth / 6 - 70) * value;
+                      double colorOpacity = value;
+
+                      return Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          width: width,
+                          height: screenWidth * 0.023,
+                          decoration: BoxDecoration(
+                            color: _selectedIndex == i
+                                ? AppColors.background.withOpacity(colorOpacity)
+                                : AppColors.cardBackground.withOpacity(0),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
             ],
@@ -708,7 +721,7 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
         const Text(
           "Berdasarkan Wilayah Anda",
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 14,
             color: Colors.white,
           ),
         ),
