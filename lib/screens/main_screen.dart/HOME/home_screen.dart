@@ -46,7 +46,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double heightPercentage = (80 / screenHeight);
+    double heightPercentage = (100 / screenHeight);
     return Scaffold(
       appBar: AppBar(
         title: const Text(

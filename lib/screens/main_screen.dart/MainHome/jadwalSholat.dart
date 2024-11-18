@@ -173,7 +173,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double heightPercentage = (80 / screenHeight);
+    double heightPercentage = (100 / screenHeight);
     final userName = Provider.of<AuthProvider>(context).userName ?? "User";
 
     return Scaffold(

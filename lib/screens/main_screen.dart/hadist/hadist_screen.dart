@@ -198,11 +198,11 @@ class _HadistScreenState extends State<HadistScreen> {
     }
   }
 
-  int _selectedIndex = 0;
+  // int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      // _selectedIndex = index;
     });
 
     // Navigasi berdasarkan index
@@ -227,7 +227,7 @@ class _HadistScreenState extends State<HadistScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double heightPercentage = (80 / screenHeight);
+    double heightPercentage = (100 / screenHeight);
     return Scaffold(
       body: isLoading
           ? const Center(

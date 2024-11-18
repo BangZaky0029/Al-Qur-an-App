@@ -102,7 +102,7 @@ class _CompassScreenState extends State<CompassScreen> {
 
   Widget _buildBottomNavigationBar() {
     double screenHeight = MediaQuery.of(context).size.height;
-    double heightPercentage = (80 / screenHeight);
+    double heightPercentage = (100 / screenHeight);
     return Container(
       height: heightPercentage * screenHeight,
       decoration: const BoxDecoration(
