@@ -209,7 +209,7 @@ class _HadistScreenState extends State<HadistScreen> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => PrayerScheduleScreen()),
+        MaterialPageRoute(builder: (context) => MainScreen()),
       );
     } else if (index == 2) {
       Navigator.push(
@@ -336,60 +336,6 @@ class _HadistScreenState extends State<HadistScreen> {
                 ),
               ],
             ),
-      bottomNavigationBar: Container(
-        height: heightPercentage * screenHeight, // Tinggi Container
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.cardBackground,
-              AppColors.textPrimary,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(
-                    top: 8), // Menyesuaikan posisi vertikal ikon
-                child: Icon(Icons.home),
-              ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(
-                    top: 8), // Menyesuaikan posisi vertikal ikon
-                child: Icon(Icons.explore),
-              ),
-              label: 'Kompas',
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(
-                    top: 8), // Menyesuaikan posisi vertikal ikon
-                child: Icon(Icons.person),
-              ),
-              label: 'Account',
-            ),
-          ],
-          // currentIndex: _selectedIndex,
-          selectedItemColor: AppColors.cardBackground,
-          unselectedItemColor: AppColors.cardBackground,
-          backgroundColor: AppColors.cardBackground.withOpacity(0.36),
-          type: BottomNavigationBarType.fixed,
-          onTap: _onItemTapped,
-          // selectedLabelStyle: const TextStyle(
-          //   fontWeight: FontWeight.bold, // Ketebalan teks ketika dipilih
-          // ),
-          // unselectedLabelStyle: const TextStyle(
-          //   fontWeight:
-          //       FontWeight.normal, // Ketebalan teks ketika tidak dipilih
-          // ),
-        ),
-      ),
     );
   }
 

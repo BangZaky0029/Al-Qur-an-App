@@ -305,7 +305,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(
         title: const Text('Register'),
         automaticallyImplyLeading:
-            false, // Supaya bisa kembali ke halaman sebelumnya
+            true, // Supaya bisa kembali ke halaman sebelumnya
         backgroundColor: AppColors.cardBackground,
       ),
       body: Center(

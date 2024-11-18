@@ -1,3 +1,4 @@
+import 'package:alquran_app/screens/main_screen.dart/MainHome/jadwalSholat.dart';
 import 'package:alquran_app/utils/colors.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -103,13 +104,33 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _onLoginSuccess(BuildContext context, String userName, int userId,
+      String email, String phoneNumber, String profilePictureUrl) {
+    // Update status login di AuthProvider dengan informasi pengguna
+    Provider.of<AuthProvider>(context, listen: false).login(
+      userName,
+      phoneNumber,
+    );
+
+    // Arahkan ke MainScreen setelah login berhasil
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => MainScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
-        automaticallyImplyLeading: true,
         backgroundColor: AppColors.cardBackground,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Center(
         child: Padding(

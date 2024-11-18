@@ -1,8 +1,6 @@
 import 'package:alquran_app/screens/main_screen.dart/HOME/homeControl.dart';
 import 'package:alquran_app/screens/main_screen.dart/Kompas/compass_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/MainHome/jadwalSholat.dart';
-import 'package:alquran_app/screens/main_screen.dart/hadist/hadist_screen.dart';
-import 'package:alquran_app/screens/main_screen.dart/tasbih_screen.dart';
 import 'package:alquran_app/screens/profile_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/Surah/subSurahScreen.dart';
 import 'package:alquran_app/utils/colors.dart';
@@ -28,7 +26,7 @@ class _HomeViewState extends State<HomeView> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => PrayerScheduleScreen()),
+        MaterialPageRoute(builder: (context) => MainScreen()),
       );
     } else if (index == 2) {
       Navigator.push(
@@ -45,8 +43,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double heightPercentage = (100 / screenHeight);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -161,60 +157,6 @@ class _HomeViewState extends State<HomeView> {
             }),
           ),
         ],
-      ),
-      bottomNavigationBar: Container(
-        height: heightPercentage * screenHeight, // Tinggi Container
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.cardBackground,
-              AppColors.textPrimary,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(
-                    top: 8), // Menyesuaikan posisi vertikal ikon
-                child: Icon(Icons.home),
-              ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(
-                    top: 8), // Menyesuaikan posisi vertikal ikon
-                child: Icon(Icons.explore),
-              ),
-              label: 'Kompas',
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(
-                    top: 8), // Menyesuaikan posisi vertikal ikon
-                child: Icon(Icons.person),
-              ),
-              label: 'Account',
-            ),
-          ],
-          // currentIndex: _selectedIndex,
-          selectedItemColor: AppColors.cardBackground,
-          unselectedItemColor: AppColors.cardBackground,
-          backgroundColor: AppColors.cardBackground.withOpacity(0.36),
-          type: BottomNavigationBarType.fixed,
-          onTap: _onItemTapped,
-          // selectedLabelStyle: const TextStyle(
-          //   fontWeight: FontWeight.bold, // Ketebalan teks ketika dipilih
-          // ),
-          // unselectedLabelStyle: const TextStyle(
-          //   fontWeight:
-          //       FontWeight.normal, // Ketebalan teks ketika tidak dipilih
-          // ),
-        ),
       ),
     );
   }

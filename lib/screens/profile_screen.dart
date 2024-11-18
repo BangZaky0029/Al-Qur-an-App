@@ -218,31 +218,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  int _selectedIndex = 2;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    // Navigasi berdasarkan index
-    if (index == 0) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => PrayerScheduleScreen()),
-      );
-    } else if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => CompassScreen()),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double heightPercentage = (100 / screenHeight);
+    // double screenHeight = MediaQuery.of(context).size.height;
+    // double heightPercentage = (100 / screenHeight);
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
@@ -478,7 +457,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         TextButton(
                           onPressed: () {
                             authProvider.logout();
-                            Navigator.pushReplacementNamed(context, '/login');
+                            Navigator.pushReplacementNamed(context, '/welcome');
                           },
                           child: const Text('Log out'),
                         ),
@@ -509,60 +488,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             )
           ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        height: heightPercentage * screenHeight, // Tinggi Container
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.cardBackground,
-              AppColors.textPrimary,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(
-                    top: 8), // Menyesuaikan posisi vertikal ikon
-                child: Icon(Icons.home),
-              ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(
-                    top: 8), // Menyesuaikan posisi vertikal ikon
-                child: Icon(Icons.explore),
-              ),
-              label: 'Kompas',
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(
-                    top: 8), // Menyesuaikan posisi vertikal ikon
-                child: Icon(Icons.person),
-              ),
-              label: 'Account',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: AppColors.background,
-          unselectedItemColor: AppColors.cardBackground,
-          backgroundColor: AppColors.cardBackground.withOpacity(0.36),
-          type: BottomNavigationBarType.fixed,
-          onTap: _onItemTapped,
-          selectedLabelStyle: const TextStyle(
-            fontWeight: FontWeight.bold, // Ketebalan teks ketika dipilih
-          ),
-          unselectedLabelStyle: const TextStyle(
-            fontWeight:
-                FontWeight.normal, // Ketebalan teks ketika tidak dipilih
-          ),
         ),
       ),
     );

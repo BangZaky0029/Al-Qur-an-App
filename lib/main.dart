@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
               ),
           '/login': (context) => LoginScreen(),
           '/register': (context) => const RegisterScreen(),
-          '/home': (context) => PrayerScheduleScreen(),
+          '/home': (context) => MainScreen(),
         },
         onGenerateRoute: (settings) {
           if (settings.name == '/verify-otp') {

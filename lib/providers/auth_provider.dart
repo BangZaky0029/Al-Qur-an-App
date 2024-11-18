@@ -48,6 +48,15 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  bool _isLoggedIn = false;
+
+  bool get isLoggedIn => _isLoggedIn;
+
+  void setLoginStatus(bool status) {
+    _isLoggedIn = status;
+    notifyListeners();
+  }
+
   // Fungsi untuk memformat nomor telepon menjadi format internasional
   String formatPhoneNumber(String phoneNumber) {
     phoneNumber = phoneNumber.replaceAll(RegExp(r'\D'), '');
@@ -153,10 +162,10 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  // Ubah bagian `login()` untuk mengatur status login ke `true` setelah login berhasil
   Future<Map<String, dynamic>> login(String email, String password) async {
     final url = Uri.parse('$_baseUrl/login');
     try {
-      // Kirim permintaan POST ke API login
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
@@ -166,14 +175,11 @@ class AuthProvider with ChangeNotifier {
         }),
       );
 
-      // Periksa status code respons
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
-        // Validasi jika data penting tersedia
         if (responseData.containsKey("user_id") &&
             responseData["user_id"] != null) {
-          // Konversi user_id menjadi int jika diperlukan
           int? userId = int.tryParse(responseData["user_id"].toString());
           if (userId == null) {
             return {
@@ -189,6 +195,9 @@ class AuthProvider with ChangeNotifier {
           setUserName(responseData["user_name"] ?? "");
           setProfilePictureUrl(responseData["picture"] ?? "");
 
+          // Set login status to true
+          setLoginStatus(true);
+
           return {"success": true};
         } else {
           return {
@@ -197,7 +206,6 @@ class AuthProvider with ChangeNotifier {
           };
         }
       } else {
-        // Tangani error dari server
         final Map<String, dynamic> errorData = json.decode(response.body);
         return {
           "success": false,
@@ -206,7 +214,6 @@ class AuthProvider with ChangeNotifier {
         };
       }
     } catch (e) {
-      // Tangani error jaringan atau parsing
       return {"success": false, "message": "An error occurred: $e"};
     }
   }

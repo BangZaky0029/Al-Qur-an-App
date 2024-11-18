@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:alquran_app/providers/auth_provider.dart';
 import 'package:alquran_app/screens/login_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/HOME/home_screen.dart';
@@ -34,24 +33,163 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: PrayerScheduleScreen(),
+      home: MainScreen(),
     );
   }
 }
 
-class PrayerScheduleScreen extends StatefulWidget {
+class MainScreen extends StatefulWidget {
   @override
-  _PrayerScheduleScreenState createState() => _PrayerScheduleScreenState();
+  _MainScreenState createState() => _MainScreenState();
 }
 
-class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
+class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+    JadwalSholatScreen(), // Halaman Utama Jadwal Sholat
+    CompassScreen(), // Halaman Kompas
+    ProfileScreen(), // Halaman Profil
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  bool isUserLoggedIn = false;
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: _buildBottomNavigationBar(screenWidth, context),
+    );
+  }
+
+  Widget _buildBottomNavigationBar(double screenWidth, BuildContext context) {
+    final isUserLoggedIn = Provider.of<AuthProvider>(context).isLoggedIn;
+
+    return Container(
+      height: 110,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.cardBackground,
+            AppColors.textPrimary,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Animated Indicator
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              for (int i = 0; i < _pages.length; i++)
+                AnimatedAlign(
+                  alignment: _selectedIndex == i
+                      ? Alignment.center
+                      : Alignment.centerLeft,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.fastOutSlowIn,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.fastOutSlowIn,
+                    width: _selectedIndex == i
+                        ? screenWidth / 6
+                        : 70, // Sesuaikan lebar agar terlihat lebih bagus
+                    height: 9,
+                    decoration: BoxDecoration(
+                      color: _selectedIndex == i
+                          ? AppColors.background
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+
+          BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Icon(Icons.home),
+                ),
+                label: 'Jadwal Sholat',
+              ),
+              BottomNavigationBarItem(
+                icon: Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Icon(Icons.explore),
+                ),
+                label: 'Kompas',
+              ),
+              BottomNavigationBarItem(
+                icon: Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Icon(Icons.person),
+                ),
+                label: 'Profil',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: AppColors.background,
+            unselectedItemColor: AppColors.cardBackground,
+            backgroundColor: Colors.transparent,
+            type: BottomNavigationBarType.fixed,
+            onTap: (int index) {
+              if (index == 2) {
+                if (isUserLoggedIn) {
+                  // Jika pengguna sudah login, cukup panggil _onItemTapped untuk navigasi
+                  _onItemTapped(index);
+                } else {
+                  // Jika pengguna belum login, arahkan ke halaman login
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                }
+              } else {
+                _onItemTapped(index);
+              }
+            },
+            selectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class JadwalSholatScreen extends StatefulWidget {
+  @override
+  _JadwalSholatScreenState createState() => _JadwalSholatScreenState();
+}
+
+class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
   String selectedCity = "Jakarta";
   List<Map<String, String>> cities = [];
   List<dynamic> prayerTimes = [];
   bool isLoading = true;
   bool isFetching = false;
   bool isSearching = false;
-  DateTime? selectedDate;
   TextEditingController searchController = TextEditingController();
   List<Map<String, String>> filteredCities = [];
   String errorMessage = "";
@@ -80,6 +218,25 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
         isLoading = false;
       });
     }
+  }
+
+  void searchCity(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        // Jika pencarian kosong, tampilkan semua kota
+        filteredCities = cities;
+        errorMessage = "";
+      } else {
+        // Menampilkan hanya kota yang dimulai dengan huruf yang sesuai query
+        filteredCities = cities
+            .where((city) =>
+                city["city"]!.toLowerCase().startsWith(query.toLowerCase()))
+            .toList();
+
+        // Set error message jika tidak ada hasil pencarian
+        errorMessage = filteredCities.isEmpty ? "Kota tidak ada" : "";
+      }
+    });
   }
 
   Future<void> fetchPrayerTimes(String city, {DateTime? date}) async {
@@ -117,63 +274,8 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
     }
   }
 
-  void searchCity(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        // Jika pencarian kosong, tampilkan semua kota
-        filteredCities = cities;
-        errorMessage = "";
-      } else {
-        // Menampilkan hanya kota yang dimulai dengan huruf yang sesuai query
-        filteredCities = cities
-            .where((city) =>
-                city["city"]!.toLowerCase().startsWith(query.toLowerCase()))
-            .toList();
-
-        // Set error message jika tidak ada hasil pencarian
-        errorMessage = filteredCities.isEmpty ? "Kota tidak ada" : "";
-      }
-    });
-  }
-
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    // Mendapatkan instance dari AuthProvider
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-    if (index == 2) {
-      // Icon "Account"
-      if (authProvider.userId != null) {
-        // Jika user sudah login, arahkan ke ProfileScreen
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ProfileScreen()),
-        );
-      } else {
-        // Jika user belum login, arahkan ke LoginScreen
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
-        );
-      }
-    } else if (index == 1) {
-      // Icon "Kompas"
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => CompassScreen()),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double heightPercentage = (100 / screenHeight);
     final userName = Provider.of<AuthProvider>(context).userName ?? "User";
 
     return Scaffold(
@@ -184,71 +286,17 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
               _buildTopContainer(userName),
               const SizedBox(height: 6.0),
               _buildBottomContainer(),
-              const SizedBox(height: 20.0),
             ],
           ),
           _buildMiddleNavigation(),
           if (isSearching) _buildSearchResults(),
         ],
       ),
-      bottomNavigationBar: Container(
-        height: screenHeight * heightPercentage, // Tinggi Container
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.cardBackground,
-              AppColors.textPrimary,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(
-                    top: 8), // Menyesuaikan posisi vertikal ikon
-                child: Icon(Icons.home),
-              ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(
-                    top: 8), // Menyesuaikan posisi vertikal ikon
-                child: Icon(Icons.explore),
-              ),
-              label: 'Kompas',
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(
-                    top: 8), // Menyesuaikan posisi vertikal ikon
-                child: Icon(Icons.person),
-              ),
-              label: 'Account',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: AppColors.background,
-          unselectedItemColor: AppColors.cardBackground,
-          backgroundColor: AppColors.cardBackground.withOpacity(0.36),
-          type: BottomNavigationBarType.fixed,
-          onTap: _onItemTapped,
-          selectedLabelStyle: const TextStyle(
-            fontWeight: FontWeight.bold, // Ketebalan teks ketika dipilih
-          ),
-          unselectedLabelStyle: const TextStyle(
-            fontWeight:
-                FontWeight.normal, // Ketebalan teks ketika tidak dipilih
-          ),
-        ),
-      ),
     );
   }
 
   Widget _buildTopContainer(String userName) {
+    // Isi dari kontainer top (sama seperti sebelumnya)
     return Container(
       margin: const EdgeInsets.all(0.1),
       padding: const EdgeInsets.symmetric(vertical: 90.0, horizontal: 30.0),
@@ -321,31 +369,6 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
         ],
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return "${_dayOfWeek(date.weekday)}, ${date.day}-${date.month}-${date.year}";
-  }
-
-  String _dayOfWeek(int weekday) {
-    switch (weekday) {
-      case 1:
-        return "Senin";
-      case 2:
-        return "Selasa";
-      case 3:
-        return "Rabu";
-      case 4:
-        return "Kamis";
-      case 5:
-        return "Jumat";
-      case 6:
-        return "Sabtu";
-      case 7:
-        return "Minggu";
-      default:
-        return "";
-    }
   }
 
   Widget _buildHeaderWithSearch() {
