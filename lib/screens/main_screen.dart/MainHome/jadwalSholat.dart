@@ -120,13 +120,17 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
   void searchCity(String query) {
     setState(() {
       if (query.isEmpty) {
+        // Jika pencarian kosong, tampilkan semua kota
         filteredCities = cities;
         errorMessage = "";
       } else {
+        // Menampilkan hanya kota yang dimulai dengan huruf yang sesuai query
         filteredCities = cities
             .where((city) =>
-                city["city"]!.toLowerCase().contains(query.toLowerCase()))
+                city["city"]!.toLowerCase().startsWith(query.toLowerCase()))
             .toList();
+
+        // Set error message jika tidak ada hasil pencarian
         errorMessage = filteredCities.isEmpty ? "Kota tidak ada" : "";
       }
     });
@@ -384,8 +388,8 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
                   child: TextField(
                     controller: searchController,
                     decoration: const InputDecoration(
-                      hintText: "Cari Kota",
-                      hintStyle: TextStyle(color: AppTheme.textPrimary),
+                      hintText: "Provinsi?",
+                      hintStyle: TextStyle(color: AppTheme.background),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(bottom: 12),
                     ),
