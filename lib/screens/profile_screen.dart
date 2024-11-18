@@ -241,6 +241,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double heightPercentage = (80 / screenHeight);
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
@@ -510,7 +512,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        height: 100, // Tinggi Container
+        height: heightPercentage * screenHeight, // Tinggi Container
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [

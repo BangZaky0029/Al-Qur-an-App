@@ -1,3 +1,4 @@
+import 'package:alquran_app/screens/main_screen.dart/Kompas/compass_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/MainHome/jadwalSholat.dart';
 import 'package:alquran_app/utils/colors.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -6,6 +7,7 @@ import 'package:alquran_app/screens/main_screen.dart/HOME/home_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/tasbih_screen.dart';
 import 'package:alquran_app/screens/profile_screen.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'dart:ui';
 import 'getBooks.dart';
 import 'getHadithRange.dart';
@@ -214,11 +216,18 @@ class _HadistScreenState extends State<HadistScreen> {
         context,
         MaterialPageRoute(builder: (context) => ProfileScreen()),
       );
+    } else if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CompassScreen()),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double heightPercentage = (80 / screenHeight);
     return Scaffold(
       body: isLoading
           ? const Center(
@@ -328,6 +337,7 @@ class _HadistScreenState extends State<HadistScreen> {
               ],
             ),
       bottomNavigationBar: Container(
+        height: heightPercentage * screenHeight, // Tinggi Container
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -341,31 +351,43 @@ class _HadistScreenState extends State<HadistScreen> {
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Padding(
+                padding: EdgeInsets.only(
+                    top: 8), // Menyesuaikan posisi vertikal ikon
+                child: Icon(Icons.home),
+              ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.explore),
+              icon: Padding(
+                padding: EdgeInsets.only(
+                    top: 8), // Menyesuaikan posisi vertikal ikon
+                child: Icon(Icons.explore),
+              ),
               label: 'Kompas',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Padding(
+                padding: EdgeInsets.only(
+                    top: 8), // Menyesuaikan posisi vertikal ikon
+                child: Icon(Icons.person),
+              ),
               label: 'Account',
             ),
           ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: AppColors.background,
+          // currentIndex: _selectedIndex,
+          selectedItemColor: AppColors.cardBackground,
           unselectedItemColor: AppColors.cardBackground,
           backgroundColor: AppColors.cardBackground.withOpacity(0.36),
           type: BottomNavigationBarType.fixed,
           onTap: _onItemTapped,
-          selectedLabelStyle: const TextStyle(
-            fontWeight: FontWeight.bold, // Ketebalan teks ketika dipilih
-          ),
-          unselectedLabelStyle: const TextStyle(
-            fontWeight:
-                FontWeight.normal, // Ketebalan teks ketika tidak dipilih
-          ),
+          // selectedLabelStyle: const TextStyle(
+          //   fontWeight: FontWeight.bold, // Ketebalan teks ketika dipilih
+          // ),
+          // unselectedLabelStyle: const TextStyle(
+          //   fontWeight:
+          //       FontWeight.normal, // Ketebalan teks ketika tidak dipilih
+          // ),
         ),
       ),
     );

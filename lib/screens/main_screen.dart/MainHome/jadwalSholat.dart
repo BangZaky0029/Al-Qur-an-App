@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:alquran_app/providers/auth_provider.dart';
 import 'package:alquran_app/screens/login_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/HOME/home_screen.dart';
@@ -166,7 +168,10 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double heightPercentage = (80 / screenHeight);
     final userName = Provider.of<AuthProvider>(context).userName ?? "User";
+
     return Scaffold(
       body: Stack(
         children: [
@@ -183,7 +188,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
         ],
       ),
       bottomNavigationBar: Container(
-        height: 100, // Tinggi Container
+        height: screenHeight * heightPercentage, // Tinggi Container
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -286,7 +291,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
   Widget _buildBottomContainer() {
     return Container(
       margin: const EdgeInsets.all(30.0),
-      padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 25.0),
+      padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 10.0),
       decoration: const BoxDecoration(
         gradient: AppTheme.gradientGreen,
         borderRadius: BorderRadius.all(
@@ -348,7 +353,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
           child: Text(
             "Jadwal Sholat",
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -416,7 +421,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
         ? const Center(child: CircularProgressIndicator())
         : prayerTimes.isNotEmpty
             ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
                     child: _buildPrayerTimeItem(
@@ -449,43 +454,50 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
                 ],
               )
             : const Text(
-                "Tidak ada jadwal sholat untuk kota ini.",
+                "Periksa Jaringan Internet Anda!",
                 style: TextStyle(color: Color.fromARGB(255, 204, 23, 23)),
               );
   }
 
   Widget _buildPrayerTimeItem(String label, String time, IconData icon) {
+    double width = MediaQuery.of(context).size.width;
     return Container(
-      width: 60,
+      width: width * 0.25,
       alignment: Alignment.center,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
+          Flexible(
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Flexible(
+            child: Icon(
+              icon,
+              size: 28,
               color: Colors.white,
             ),
           ),
           const SizedBox(height: 6),
-          Icon(
-            icon,
-            size: 28,
-            color: Colors.white,
-          ),
-          const SizedBox(height: 6),
-          Text(
-            time,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+          Flexible(
+            child: Text(
+              time,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -494,12 +506,13 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
   }
 
   Widget _buildMiddleNavigation() {
-    return Positioned(
-      top: 150.0,
-      left: 30.0,
-      right: 30.0,
+    double screenHeight = MediaQuery.of(context).size.height;
+    double heightPercentage = (100 / screenHeight);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 135.0),
       child: Container(
-        height: 85.0,
+        height: screenHeight *
+            heightPercentage, // Tetapkan tinggi secara fix agar konsisten di semua perangkat
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
         decoration: BoxDecoration(
           color: AppTheme.textPrimary,
@@ -594,17 +607,27 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
   }
 
   Widget _buildSearchResults() {
+    // Mendapatkan ukuran layar
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Mengonversi 30.0 menjadi proporsional terhadap lebar layar
+    double rightValue = screenWidth * 0.12; // 15% dari lebar layar
+    double leftValue = screenWidth * 0.50; // 35% dari lebar layar
+    double topValue = screenHeight * 0.37; // 36% dari tinggi layar
+    double heightValue = screenHeight * 0.25; // 25% dari tinggi layar
+    double widthValue = screenWidth * 0.3; // 30% dari lebar layar
     return Positioned(
-      top: 310,
-      left: 232,
-      right: 58,
+      top: topValue,
+      left: leftValue,
+      right: rightValue,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
-            width: 50,
-            height: 200,
+            width: widthValue,
+            height: heightValue,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: AppColors.background.withOpacity(0.9),
               borderRadius: BorderRadius.circular(12.0),
               boxShadow: [
                 BoxShadow(
@@ -659,7 +682,7 @@ class _PrayerScheduleScreenState extends State<PrayerScheduleScreen> {
         const Text(
           "Berdasarkan Wilayah Anda",
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 12,
             color: Colors.white,
           ),
         ),

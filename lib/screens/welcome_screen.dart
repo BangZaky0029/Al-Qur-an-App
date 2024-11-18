@@ -27,7 +27,7 @@ class WelcomeScreen extends StatelessWidget {
               const Text(
                 "Assalamu'alamualaikum,\nEveryone!",
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF162644), // Warna hijau gelap
                 ),
@@ -39,7 +39,7 @@ class WelcomeScreen extends StatelessWidget {
               const Text(
                 "Sudahkah membaca Al Qur'an hari ini?",
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 13,
                   color: Color(0xFF537A5A),
                 ),
                 textAlign: TextAlign.center,
