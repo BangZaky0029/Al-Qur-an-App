@@ -1,0 +1,65 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.example.alquran_app"
+    compileSdk = 34
+    // ndkVersion = "21.3.6528147" // Uncomment jika perlu NDK versi spesifik
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    defaultConfig {
+    applicationId = "com.example.alquran_app"
+    minSdkVersion = 20
+    targetSdk = 34
+    versionCode = flutter.versionCode.toInteger()
+    versionName = flutter.versionName
+    resValue "string", "applicationName", "AlquranApp"
+}
+
+
+   signingConfigs {
+    release {
+        keyAlias 'myappkey'  // Sesuaikan dengan alias yang kamu tentukan
+        keyPassword '290903'  // Gantilah dengan password alias yang kamu tentukan
+        storeFile file('keystore/myapp-release-key.jks')  // Pastikan path sesuai lokasi file keystore
+        storePassword '290903'  // Gantilah dengan password keystore yang kamu buat
+    }
+}
+
+
+buildTypes {
+    release {
+        signingConfig = signingConfigs.release
+        minifyEnabled true  // Aktifkan shrinking untuk unused code
+        shrinkResources false // Aktifkan shrinking untuk unused resources
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+}
+
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def appName = "Al-Qur'an"
+            def buildType = variant.buildType.name
+            def versionName = variant.versionName
+            def flavorName = variant.flavorName ? "-${variant.flavorName}" : ""
+            def newApkName = "${appName}${flavorName}-${buildType}-${versionName}.apk"
+            output.outputFileName = newApkName
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
