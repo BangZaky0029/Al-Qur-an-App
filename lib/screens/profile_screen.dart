@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:alquran_app/screens/main_screen.dart/Kompas/compass_screen.dart';
-import 'package:alquran_app/screens/main_screen.dart/MainHome/jadwalSholat.dart';
 import 'package:alquran_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';

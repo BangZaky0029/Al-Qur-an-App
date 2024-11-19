@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'package:alquran_app/providers/auth_provider.dart';
 import 'package:alquran_app/screens/login_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/HOME/home_screen.dart';
@@ -13,7 +12,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
-import 'package:animations/animations.dart';
 
 void main() {
   runApp(
@@ -76,10 +74,13 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildBottomNavigationBar(double screenWidth, BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    double heightValue = (103 / screenHeight);
     final isUserLoggedIn = Provider.of<AuthProvider>(context).isLoggedIn;
 
     return Container(
-      height: 110,
+      height: heightValue * screenHeight,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -137,21 +138,21 @@ class _MainScreenState extends State<MainScreen> {
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Padding(
-                  padding: EdgeInsets.only(top: 8),
+                  padding: EdgeInsets.only(top: 1),
                   child: Icon(Icons.home),
                 ),
-                label: 'Jadwal Sholat',
+                label: 'Home',
               ),
               BottomNavigationBarItem(
                 icon: Padding(
-                  padding: EdgeInsets.only(top: 8),
+                  padding: EdgeInsets.only(top: 1),
                   child: Icon(Icons.explore),
                 ),
                 label: 'Kompas',
               ),
               BottomNavigationBarItem(
                 icon: Padding(
-                  padding: EdgeInsets.only(top: 8),
+                  padding: EdgeInsets.only(top: 1),
                   child: Icon(Icons.person),
                 ),
                 label: 'Profil',
@@ -253,11 +254,11 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
   }
 
   Future<void> fetchPrayerTimes(String city, {DateTime? date}) async {
-    final String apiUrl = "https://api.aladhan.com/v1/calendarByCity";
-    final String country = "Indonesia";
+    const String apiUrl = "https://api.aladhan.com/v1/calendarByCity";
+    const String country = "Indonesia";
     final int month = date?.month ?? DateTime.now().month;
     final int year = date?.year ?? DateTime.now().year;
-    final int method = 5;
+    const int method = 5;
     final String requestUrl =
         "$apiUrl?city=$city&country=$country&month=$month&year=$year&method=$method";
 
@@ -385,6 +386,12 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
   }
 
   Widget _buildHeaderWithSearch() {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    double heightValue = (37.0 / screenHeight);
+    double widthtValue = (305.0 / screenHeight);
+    double widthValue_1 = (73.0 / screenWidth);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -393,7 +400,7 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
           child: Text(
             "Jadwal Sholat",
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -401,8 +408,10 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
         ),
         AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          width: isSearching ? 140.0 : 73.0,
-          height: 37.0,
+          width: isSearching
+              ? widthtValue * screenWidth
+              : widthValue_1 * screenWidth,
+          height: heightValue * screenHeight,
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           decoration: BoxDecoration(
             color: AppTheme.background.withOpacity(0.3),
@@ -614,6 +623,8 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
     required String label,
     required VoidCallback onTap,
   }) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double heightValue = (40 / screenHeight);
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -622,7 +633,7 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
           if (iconPath != null)
             Image.asset(
               iconPath,
-              height: 30,
+              height: heightValue * screenHeight,
               errorBuilder: (context, error, stackTrace) {
                 return const Icon(Icons.error, color: Colors.white);
               },
@@ -715,6 +726,8 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
   }
 
   Widget _buildCityInfo() {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double heightValue = (40 / screenHeight);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -727,7 +740,7 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
         ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-          height: 40,
+          height: heightValue * screenHeight,
           decoration: BoxDecoration(
             color: AppTheme.background.withOpacity(0.3),
             borderRadius: BorderRadius.circular(12),

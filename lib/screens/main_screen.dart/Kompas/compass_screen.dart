@@ -1,5 +1,3 @@
-import 'package:alquran_app/screens/main_screen.dart/MainHome/jadwalSholat.dart';
-import 'package:alquran_app/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:alquran_app/utils/colors.dart';
 
@@ -9,26 +7,6 @@ class CompassScreen extends StatefulWidget {
 }
 
 class _CompassScreenState extends State<CompassScreen> {
-  int _selectedIndex = 1;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProfileScreen()),
-      );
-    } else if (index == 0) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MainScreen()),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

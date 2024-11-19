@@ -3,15 +3,15 @@ import 'package:alquran_app/screens/main_screen.dart/MainHome/jadwalSholat.dart'
 import 'package:alquran_app/utils/colors.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:alquran_app/screens/main_screen.dart/HOME/home_screen.dart';
-import 'package:alquran_app/screens/main_screen.dart/tasbih_screen.dart';
+// import 'package:alquran_app/screens/main_screen.dart/HOME/home_screen.dart';
+// import 'package:alquran_app/screens/main_screen.dart/tasbih_screen.dart';
 import 'package:alquran_app/screens/profile_screen.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+// import 'package:get/get.dart';
 import 'dart:ui';
 import 'getBooks.dart';
 import 'getHadithRange.dart';
-import 'getSpecificHadith.dart';
+// import 'getSpecificHadith.dart';
 
 class HadistScreen extends StatefulWidget {
   @override
@@ -226,8 +226,8 @@ class _HadistScreenState extends State<HadistScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double heightPercentage = (100 / screenHeight);
+    // double screenHeight = MediaQuery.of(context).size.height;
+    // double heightPercentage = (100 / screenHeight);
     return Scaffold(
       body: isLoading
           ? const Center(
