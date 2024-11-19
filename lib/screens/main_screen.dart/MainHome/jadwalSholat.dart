@@ -76,11 +76,13 @@ class _MainScreenState extends State<MainScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    double heightValue = (103 / screenHeight);
+    double heightValue = (70 / screenHeight);
+    double widthtValue = (11 / screenWidth);
     final isUserLoggedIn = Provider.of<AuthProvider>(context).isLoggedIn;
 
     return Container(
       height: heightValue * screenHeight,
+      margin: EdgeInsets.only(bottom: 0),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -112,14 +114,15 @@ class _MainScreenState extends State<MainScreen> {
                     duration: const Duration(milliseconds: 800),
                     curve: Curves.easeInOut,
                     builder: (context, value, child) {
-                      double width = 70 + (screenWidth / 6 - 70) * value;
+                      double width = heightValue * screenHeight +
+                          (screenWidth / 50 - heightValue) * value;
                       double colorOpacity = value;
 
                       return Align(
                         alignment: Alignment.center,
                         child: Container(
                           width: width,
-                          height: screenWidth * 0.023,
+                          height: screenWidth * widthtValue,
                           decoration: BoxDecoration(
                             color: _selectedIndex == i
                                 ? AppColors.background.withOpacity(colorOpacity)
@@ -659,17 +662,14 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
 
   Widget _buildSearchResults() {
     // Nilai tetap untuk posisi dan ukuran container
-    double rightValue = 40.0; // Jarak tetap dari kanan
-    double leftValue = 250.0; // Jarak tetap dari kiri
-    double topValue = 300.0; // Jarak tetap dari atas
 
     double screenHeight = MediaQuery.of(context).size.height;
     double heightPercentage = (165 / screenHeight);
 
     return Positioned(
-      top: topValue,
-      left: leftValue,
-      right: rightValue,
+      top: 300,
+      left: 181,
+      right: 43,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
