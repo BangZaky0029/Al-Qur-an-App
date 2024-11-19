@@ -139,7 +139,7 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                         onPressed: () {
                           onWelcomeComplete(); // Set isFirstLaunch menjadi false
-                          Navigator.pushReplacement(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => LoginScreen()),
@@ -170,7 +170,7 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                         onPressed: () {
                           onWelcomeComplete(); // Set isFirstLaunch menjadi false
-                          Navigator.pushReplacement(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const RegisterScreen()),
