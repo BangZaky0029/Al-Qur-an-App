@@ -29,6 +29,7 @@ dependencies:
   another_flushbar: ^1.12.30
   table_calendar: ^3.1.2
   animations: ^2.0.0
+  flutter_qiblah: ^3.0.4
 
 
 dev_dependencies:
@@ -47,6 +48,8 @@ flutter:
     - /Users/rizkicahya/alquran_app/assets/images/masjid-2.png
     - /Users/rizkicahya/alquran_app/assets/images/background.png
     - /Users/rizkicahya/alquran_app/assets/logo/kereem-1.png
+    - /Users/rizkicahya/alquran_app/assets/images/kompas-2.png
+    - /Users/rizkicahya/alquran_app/assets/images/arrow.png
 
     - /Users/rizkicahya/alquran_app/assets/logo/tasbih.png
     - /Users/rizkicahya/alquran_app/assets/logo/quran.png

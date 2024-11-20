@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:alquran_app/screens/login_screen.dart';
 import 'package:alquran_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -438,26 +439,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ElevatedButton(
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Log out'),
-                      content: const Text('Are you sure you want to log out?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            authProvider.logout();
-                            Navigator.pushReplacementNamed(context, '/welcome');
-                          },
-                          child: const Text('Log out'),
-                        ),
-                      ],
-                    ),
-                  );
+                  if (Provider.of<AuthProvider>(context, listen: false)
+                      .isLoggedIn) {
+                    // Jika pengguna sudah login, tampilkan dialog konfirmasi logout
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Log out'),
+                        content:
+                            const Text('Are you sure you want to log out?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // Logout pengguna dan arahkan ke halaman Welcome
+                              Provider.of<AuthProvider>(context, listen: false)
+                                  .logout();
+                              Navigator.pushReplacementNamed(
+                                  context, '/welcome');
+                            },
+                            child: const Text('Log out'),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    // Jika pengguna belum login, arahkan ke halaman Login
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
@@ -474,6 +489,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
+
             const SizedBox(height: 10),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),

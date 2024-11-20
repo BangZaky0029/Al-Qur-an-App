@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:alquran_app/screens/login_screen.dart';
+// import 'package:alquran_app/screens/main_screen.dart/MainHome/jadwalSholat.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,12 +39,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   // Fungsi untuk mengecek kekuatan password
   bool _isPasswordStrong(String password) {
-    final hasUppercase = password.contains(RegExp(r'[A-Z]'));
-    final hasLowercase = password.contains(RegExp(r'[a-z]'));
-    final hasDigits = password.contains(RegExp(r'[0-9]'));
-    final hasSpecialCharacters =
-        password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
-    final isAtLeast6Chars = password.length >= 6;
+    final hasUppercase = password.contains(RegExp(r'[A-Z]')); // Huruf besar
+    final hasLowercase = password.contains(RegExp(r'[a-z]')); // Huruf kecil
+    const hasDigits = true; // Angka
+
+    final hasSpecialCharacters = password.contains(
+        RegExp(r'[!@#$%^&*(),.?":{}|<>_\-+/\\\[\]]')); // Lebih lengkap
+    final isAtLeast6Chars = password.length >= 6; // Panjang minimal
 
     return hasUppercase &&
         hasLowercase &&

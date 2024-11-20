@@ -8,20 +8,15 @@ class AuthProvider with ChangeNotifier {
   String? _userEmail;
   String? _userName;
   String? _profilePictureUrl;
-  int? _userId; // Tambahkan userId di sini
-  // URL untuk API
+  int? _userId;
   final String _baseUrl = 'https://zaky.yappsdev.com/api/quran/auth';
-  // Url untuk testing
-  // final String _baseUrl = 'http://127.0.0.1:8000/auth';
 
-  // Getter untuk data user
   String? get userPhoneNumber => _userPhoneNumber;
   String? get userEmail => _userEmail;
   String? get userName => _userName;
   String? get profilePictureUrl => _profilePictureUrl;
-  int? get userId => _userId; // Getter untuk userId
+  int? get userId => _userId;
 
-  // Setter untuk masing-masing field user
   void setUserPhoneNumber(String phoneNumber) {
     _userPhoneNumber = phoneNumber;
     notifyListeners();
@@ -42,14 +37,12 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Setter untuk URL gambar profil dan pemberitahuan kepada pendengar
   void setProfilePictureUrl(String? url) {
     _profilePictureUrl = url;
     notifyListeners();
   }
 
   bool _isLoggedIn = false;
-
   bool get isLoggedIn => _isLoggedIn;
 
   void setLoginStatus(bool status) {
@@ -57,7 +50,6 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Fungsi untuk memformat nomor telepon menjadi format internasional
   String formatPhoneNumber(String phoneNumber) {
     phoneNumber = phoneNumber.replaceAll(RegExp(r'\D'), '');
     if (phoneNumber.startsWith('0')) {
@@ -68,7 +60,6 @@ class AuthProvider with ChangeNotifier {
     return phoneNumber;
   }
 
-  // Fungsi untuk registrasi
   Future<Map<String, dynamic>> register(String email, String phoneNumber,
       String password, String userName) async {
     final url = Uri.parse('$_baseUrl/register');
@@ -101,7 +92,6 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // Fungsi untuk verifikasi OTP
   Future<Map<String, dynamic>> verifyOtp(
       String email, String phoneNumber, String otp) async {
     final url = Uri.parse('$_baseUrl/verify-otp');
@@ -133,7 +123,6 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // Fungsi untuk kirim ulang OTP
   Future<Map<String, dynamic>> resendOtp(String phoneNumber) async {
     final url = Uri.parse('$_baseUrl/resend-otp');
     final formattedPhoneNumber = formatPhoneNumber(phoneNumber);
@@ -162,7 +151,6 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // Ubah bagian `login()` untuk mengatur status login ke `true` setelah login berhasil
   Future<Map<String, dynamic>> login(String email, String password) async {
     final url = Uri.parse('$_baseUrl/login');
     try {
@@ -188,14 +176,12 @@ class AuthProvider with ChangeNotifier {
             };
           }
 
-          // Simpan data pengguna
           setUserId(userId);
           setUserEmail(responseData["email"] ?? "");
           setUserPhoneNumber(responseData["phone_number"] ?? "");
           setUserName(responseData["user_name"] ?? "");
           setProfilePictureUrl(responseData["picture"] ?? "");
 
-          // Set login status to true
           setLoginStatus(true);
 
           return {"success": true};
@@ -218,8 +204,6 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // Fungsi untuk mengunggah gambar profil
-  // Fungsi untuk mengunggah gambar profil
   Future<bool> updateProfilePicture(
       File imageFile, BuildContext context) async {
     if (_userId == null) {
@@ -230,7 +214,6 @@ class AuthProvider with ChangeNotifier {
     final url = Uri.parse('$_baseUrl/upload-profile-picture');
     var request = http.MultipartRequest('POST', url);
 
-    // Ubah user_id menjadi String menggunakan toString()
     request.fields['user_id'] = _userId!.toString();
     request.files
         .add(await http.MultipartFile.fromPath('file', imageFile.path));
@@ -241,10 +224,11 @@ class AuthProvider with ChangeNotifier {
         final responseData = await response.stream.bytesToString();
         final decodedData = json.decode(responseData);
 
-        _profilePictureUrl = decodedData['picture_url'];
-        notifyListeners();
+        setProfilePictureUrl(decodedData['picture_url']);
         return true;
       } else {
+        print(
+            "Failed to update profile picture with status: ${response.statusCode}");
         return false;
       }
     } catch (error) {
@@ -253,30 +237,29 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // Fungsi untuk mengambil gambar profil berdasarkan user_id
   Future<void> fetchProfilePicture(String userId) async {
     final url = Uri.parse('$_baseUrl/get-profile-picture/$userId');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final decodedData = json.decode(response.body);
-        _profilePictureUrl = decodedData['picture_url'];
-        notifyListeners();
+        setProfilePictureUrl(decodedData['picture_url']);
       } else {
-        print("Failed to fetch profile picture");
+        print(
+            "Failed to fetch profile picture with status: ${response.statusCode}");
       }
     } catch (error) {
       print("Error fetching profile picture: $error");
     }
   }
 
-  // Fungsi untuk logout
   void logout() {
     _userPhoneNumber = null;
     _userEmail = null;
     _userName = null;
     _profilePictureUrl = null;
     _userId = null;
+    _isLoggedIn = false;
     notifyListeners();
   }
 }

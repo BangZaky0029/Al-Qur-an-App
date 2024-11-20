@@ -46,9 +46,9 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    JadwalSholatScreen(), // Halaman Utama Jadwal Sholat
-    CompassScreen(), // Halaman Kompas
-    ProfileScreen(), // Halaman Profil
+    JadwalSholatScreen(),
+    CompassScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -57,32 +57,26 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  bool isUserLoggedIn = false;
-
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(screenWidth, context),
+      bottomNavigationBar: _buildBottomNavigationBar(context),
     );
   }
 
-  Widget _buildBottomNavigationBar(double screenWidth, BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    double heightValue = (70 / screenHeight);
-    double widthtValue = (11 / screenWidth);
+  Widget _buildBottomNavigationBar(BuildContext context) {
+    // final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    double bottomNavigationBarHeight = (98.0 / screenHeight);
     final isUserLoggedIn = Provider.of<AuthProvider>(context).isLoggedIn;
 
     return Container(
-      height: heightValue * screenHeight,
-      margin: EdgeInsets.only(bottom: 0),
+      height: screenHeight *
+          bottomNavigationBarHeight, // Tinggi tetap untuk bottom navigation
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -94,70 +88,44 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           // Animated Indicator
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              for (int i = 0; i < _pages.length; i++)
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedIndex = i;
-                    });
-                  },
-                  child: TweenAnimationBuilder<double>(
-                    tween: Tween<double>(
-                        begin: _selectedIndex == i ? 1.0 : 0.0,
-                        end: _selectedIndex == i ? 1.0 : 0.0),
-                    duration: const Duration(milliseconds: 800),
-                    curve: Curves.easeInOut,
-                    builder: (context, value, child) {
-                      double width = heightValue * screenHeight +
-                          (screenWidth / 50 - heightValue) * value;
-                      double colorOpacity = value;
-
-                      return Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          width: width,
-                          height: screenWidth * widthtValue,
-                          decoration: BoxDecoration(
-                            color: _selectedIndex == i
-                                ? AppColors.background.withOpacity(colorOpacity)
-                                : AppColors.cardBackground.withOpacity(0),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                        ),
-                      );
-                    },
+            children: List.generate(
+              _pages.length,
+              (index) => GestureDetector(
+                onTap: () => _onItemTapped(index),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: _selectedIndex == index ? 65.0 : 65.0,
+                  height: _selectedIndex == index ? 6.0 : 6.0,
+                  decoration: BoxDecoration(
+                    color: _selectedIndex == index
+                        ? AppColors.background
+                        : AppColors.cardBackground.withOpacity(0),
+                    borderRadius: BorderRadius.circular(3.0),
                   ),
                 ),
-            ],
+              ),
+            ),
           ),
 
+          // BottomNavigationBar
           BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Padding(
-                  padding: EdgeInsets.only(top: 1),
-                  child: Icon(Icons.home),
-                ),
+                icon: Icon(Icons.home),
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Padding(
-                  padding: EdgeInsets.only(top: 1),
-                  child: Icon(Icons.explore),
-                ),
+                icon: Icon(Icons.explore),
                 label: 'Kompas',
               ),
               BottomNavigationBarItem(
-                icon: Padding(
-                  padding: EdgeInsets.only(top: 1),
-                  child: Icon(Icons.person),
-                ),
+                icon: Icon(Icons.person),
                 label: 'Profil',
               ),
             ],
