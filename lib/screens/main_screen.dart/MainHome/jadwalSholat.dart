@@ -276,8 +276,10 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
           Column(
             children: [
               _buildTopContainer(userName),
-              const SizedBox(height: 6.0),
+              const SizedBox(height: 10.0),
               _buildBottomContainer(),
+              // const SizedBox(height: 6.0),
+              _buildVideoDakwahSection(),
             ],
           ),
           _buildMiddleNavigation(),
@@ -358,8 +360,6 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
           _buildPrayerTimes(),
           const SizedBox(height: 16.0),
           _buildCityInfo(),
-          const SizedBox(height: 16.0),
-          _buildVideoDakwahSection(),
         ],
       ),
     );
@@ -642,15 +642,17 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
 
     double screenHeight = MediaQuery.of(context).size.height;
     double heightPercentage = (165 / screenHeight);
+    double screenWidth = MediaQuery.of(context).size.width;
+    double widthPercentage = (140 / screenWidth);
 
     return Positioned(
       top: 300,
-      left: 181,
+      // left: 181,
       right: 43,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
-            // width: widthPercentage * screenwidth,
+            width: widthPercentage * screenWidth,
             height: heightPercentage * screenHeight,
             decoration: BoxDecoration(
               color: AppColors.background.withOpacity(0.9),
@@ -704,14 +706,33 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
 
   Widget _buildVideoDakwahSection() {
     final YouTubeService youTubeService = YouTubeService();
+    double screenHeight = MediaQuery.of(context).size.height;
+    double heightPercentage = (250 / screenHeight);
+    double screenWidth = MediaQuery.of(context).size.width;
+    double widthPercentage = (330 / screenWidth);
 
     return Container(
-      margin: const EdgeInsets.only(top: 16.0), // Jarak ke atas (jadwal sholat)
-      padding: const EdgeInsets.all(8.0),
+      // margin:
+      //     const EdgeInsets.only(bottom: 10.0), // Jarak ke atas (jadwal sholat)
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: AppTheme.cardBackground.withOpacity(0.3),
+        gradient: const LinearGradient(
+          colors: [
+            AppColors.cardBackground,
+            AppColors.textPrimary,
+          ],
+          begin: Alignment.topLeft, // Gradien dimulai dari kiri atas
+          end: Alignment.bottomRight, // Gradien berakhir di kanan bawah
+        ),
         borderRadius: BorderRadius.circular(12),
+        border: const Border.fromBorderSide(
+          BorderSide(
+            color: AppTheme.textPrimary,
+            width: 2.0,
+          ),
+        ), // Membuat sudut-sudut membulat
       ),
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -728,7 +749,9 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
           ),
           const SizedBox(height: 12),
           SizedBox(
-            height: 250, // Tinggi eksplisit untuk menghindari masalah layout
+            width: widthPercentage * screenWidth,
+            height: heightPercentage *
+                screenHeight, // Tinggi eksplisit untuk menghindari masalah layout
             child: FutureBuilder<List<dynamic>>(
               future: youTubeService.fetchVideos(),
               builder: (context, snapshot) {
@@ -757,9 +780,9 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, // 2 kolom
-                      crossAxisSpacing: 12.0, // Jarak antar kolom
-                      mainAxisSpacing: 16.0, // Jarak antar baris
-                      childAspectRatio: 16 / 9, // Rasio aspek card video
+                      crossAxisSpacing: 10.0, // Jarak antar kolom
+                      mainAxisSpacing: 20.0, // Jarak antar baris
+                      childAspectRatio: 16 / 16, // Rasio aspek card video
                     ),
                     itemCount: videos.length,
                     itemBuilder: (context, index) {
@@ -776,23 +799,29 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
                           );
                         },
                         child: Container(
-                          margin: const EdgeInsets.only(
-                              bottom: 8.0), // Jarak antar thumbnail dan label
+                          // margin: const EdgeInsets.only(
+                          //     bottom: 30.0), // Jarak antar thumbnail dan label
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.white,
-                          ),
+                              borderRadius: BorderRadius.circular(12),
+                              color: AppColors.cardBackground,
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  offset: Offset(2, 2),
+                                  blurRadius: 1.0,
+                                )
+                              ]),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ClipRRect(
-                                borderRadius:
-                                    BorderRadius.circular(8), // Sudut membulat
+                                borderRadius: BorderRadius.circular(8),
+                                // Sudut membulat
                                 child: Image.network(
                                   video.thumbnailUrl,
                                   width: double.infinity, // Lebar penuh
                                   height:
-                                      100, // Tinggi thumbnail lebih kecil untuk memastikan label lebih terlihat
+                                      110, // Tinggi thumbnail lebih kecil untuk memastikan label lebih terlihat
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
                                     return const Icon(Icons.broken_image,
@@ -800,7 +829,7 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
                                   },
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 10),
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8.0),

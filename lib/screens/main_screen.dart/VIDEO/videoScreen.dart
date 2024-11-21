@@ -1,3 +1,4 @@
+import 'package:alquran_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'youtube_service.dart';
 import 'modelVideo.dart';
@@ -57,22 +58,50 @@ class VideoDakwahPage extends StatelessWidget {
                       ),
                     );
                   },
-                  child: Card(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 12.0, vertical: 8.0),
-                    child: ListTile(
-                      leading: video.thumbnailUrl.isNotEmpty
-                          ? Image.network(video.thumbnailUrl)
-                          : const Icon(Icons.image_not_supported, size: 40),
-                      title: Text(
-                        video.title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.cardBackground,
+                          AppColors.background,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      // borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 12.0,
+                          vertical: 8.0), // Memberikan jarak antar card
+                      color: AppColors
+                          .background, // Set warna Card menjadi transparan agar gradien terlihat
+                      elevation: 3, // Sedikit elevation untuk efek bayangan
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            12), // Sesuaikan dengan Container di luar
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(
+                            8.0), // Tambahkan padding untuk ruang di dalam card
+                        child: ListTile(
+                          leading: video.thumbnailUrl.isNotEmpty
+                              ? Image.network(video.thumbnailUrl)
+                              : const Icon(Icons.image_not_supported, size: 40),
+                          title: Text(
+                            video.title,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: const Icon(
+                            Icons.play_circle,
+                            color: AppColors.textPrimary,
+                            size: 35,
+                          ),
                         ),
                       ),
-                      trailing:
-                          const Icon(Icons.play_arrow, color: Colors.green),
                     ),
                   ),
                 );
