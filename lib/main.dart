@@ -8,16 +8,27 @@ import 'package:alquran_app/utils/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // Import dotenv
 import 'providers/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    // Muat variabel lingkungan dari file .env
+    await dotenv.load(fileName: ".env");
+    print("File .env berhasil dimuat");
+  } catch (e) {
+    // Menangani error jika file .env tidak ditemukan atau gagal dimuat
+    print("Gagal memuat file .env: $e");
+  }
+
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState(); // Pastikan tipe returnnya sesuai
 }
 
 class _MyAppState extends State<MyApp> {

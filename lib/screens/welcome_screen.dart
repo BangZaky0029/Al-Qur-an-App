@@ -48,7 +48,7 @@ class WelcomeScreen extends StatelessWidget {
 
               // Gambar di bawah teks
               Image.asset(
-                '/Users/rizkicahya/alquran_app/assets/logo/kereem-1.png', // Pastikan path ini sesuai di pubspec.yaml
+                '/Users/rizkicahya/alquran_app/assets-1/logo/kereem-1.png', // Pastikan path ini sesuai di pubspec.yaml
                 height: 200,
                 fit: BoxFit.cover,
               ),

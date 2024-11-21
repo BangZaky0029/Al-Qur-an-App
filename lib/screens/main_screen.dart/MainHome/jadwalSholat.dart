@@ -2,6 +2,7 @@ import 'package:alquran_app/providers/auth_provider.dart';
 import 'package:alquran_app/screens/login_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/HOME/home_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/Kompas/compass_screen.dart';
+import 'package:alquran_app/screens/main_screen.dart/VIDEO/videoScreen.dart';
 import 'package:alquran_app/screens/main_screen.dart/hadist/hadist_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/tasbih_screen.dart';
 import 'package:alquran_app/screens/profile_screen.dart';
@@ -47,13 +48,15 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     JadwalSholatScreen(),
-    CompassScreen(),
+    VideoDakwahPage(),
     ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      if (index < _pages.length) {
+        _selectedIndex = index;
+      }
     });
   }
 
@@ -72,7 +75,8 @@ class _MainScreenState extends State<MainScreen> {
     // final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     double bottomNavigationBarHeight = (98.0 / screenHeight);
-    final isUserLoggedIn = Provider.of<AuthProvider>(context).isLoggedIn;
+    final isUserLoggedIn =
+        Provider.of<AuthProvider>(context, listen: false)?.isLoggedIn ?? false;
 
     return Container(
       height: screenHeight *
@@ -122,7 +126,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.explore),
-                label: 'Kompas',
+                label: 'Video',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
@@ -553,7 +557,7 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildNavigationItem(
-              iconPath: 'assets/logo/tasbih.png',
+              iconPath: 'assets-1/logo/tasbih.png',
               label: "Tasbih",
               onTap: () {
                 Navigator.push(
@@ -563,7 +567,7 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
               },
             ),
             _buildNavigationItem(
-              iconPath: 'assets/logo/quran-iqro.png',
+              iconPath: 'assets-1/logo/quran-iqro.png',
               label: "Al Qur'an",
               onTap: () {
                 Navigator.push(
@@ -573,7 +577,7 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
               },
             ),
             _buildNavigationItem(
-              iconPath: 'assets/logo/quran.png',
+              iconPath: 'assets-1/logo/quran.png',
               label: "Hadits",
               onTap: () {
                 Navigator.push(

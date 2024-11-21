@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_compass/flutter_compass.dart';
 import 'package:alquran_app/utils/colors.dart';
 
 class CompassScreen extends StatefulWidget {
@@ -12,21 +11,17 @@ class CompassScreen extends StatefulWidget {
 
 class _CompassScreenState extends State<CompassScreen> {
   double? _qiblaDirection;
-  double? _currentHeading;
   StreamSubscription<Position>? _positionStream;
-  StreamSubscription<CompassEvent>? _compassStream;
 
   @override
   void initState() {
     super.initState();
     _fetchLocationAndCalculateQibla();
-    _listenToCompass();
   }
 
   @override
   void dispose() {
     _positionStream?.cancel();
-    _compassStream?.cancel();
     super.dispose();
   }
 
@@ -65,21 +60,6 @@ class _CompassScreenState extends State<CompassScreen> {
       });
     } catch (e) {
       print("Error mendapatkan lokasi: $e");
-    }
-  }
-
-  void _listenToCompass() {
-    try {
-      _compassStream = FlutterCompass.events?.listen((CompassEvent event) {
-        if (event.heading != null && !event.heading!.isNaN) {
-          setState(() {
-            _currentHeading = event.heading;
-            print("Heading saat ini: $_currentHeading");
-          });
-        }
-      });
-    } catch (e) {
-      print("Error membaca sensor kompas: $e");
     }
   }
 
@@ -127,7 +107,6 @@ class _CompassScreenState extends State<CompassScreen> {
   @override
   Widget build(BuildContext context) {
     double? qiblaDirection = _qiblaDirection;
-    double? currentHeading = _currentHeading;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -146,7 +125,7 @@ class _CompassScreenState extends State<CompassScreen> {
       ),
       body: SafeArea(
         child: Center(
-          child: qiblaDirection != null && currentHeading != null
+          child: qiblaDirection != null
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -154,16 +133,14 @@ class _CompassScreenState extends State<CompassScreen> {
                       alignment: Alignment.center,
                       children: [
                         Image.asset(
-                          'assets/images/kompas-2.png',
+                          'assets-1/images/kompas-2.png',
                           height: 250,
                           width: 250,
                         ),
                         Transform.rotate(
-                          angle: ((qiblaDirection - currentHeading) *
-                              (pi / 180) *
-                              -1),
+                          angle: (qiblaDirection * (pi / 180) * -1),
                           child: Image.asset(
-                            'assets/images/arrow.png',
+                            'assets-1/images/arrow.png',
                             height: 100,
                             width: 100,
                           ),
@@ -187,7 +164,7 @@ class _CompassScreenState extends State<CompassScreen> {
                     CircularProgressIndicator(),
                     SizedBox(height: 20),
                     Text(
-                      'Memuat lokasi dan sensor kompas...',
+                      'Memuat lokasi...',
                       style: TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 16,
