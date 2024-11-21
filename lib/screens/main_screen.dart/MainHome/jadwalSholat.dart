@@ -128,7 +128,7 @@ class _MainScreenState extends State<MainScreen> {
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.explore),
+                icon: Icon(Icons.videocam),
                 label: 'Video',
               ),
               BottomNavigationBarItem(
@@ -137,7 +137,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: AppColors.background,
+            selectedItemColor: const Color.fromARGB(255, 4, 5, 2),
             unselectedItemColor: AppColors.cardBackground,
             backgroundColor: Colors.transparent,
             type: BottomNavigationBarType.fixed,
