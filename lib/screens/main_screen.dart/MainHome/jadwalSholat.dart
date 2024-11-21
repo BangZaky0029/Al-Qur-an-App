@@ -137,7 +137,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: const Color.fromARGB(255, 4, 5, 2),
+            selectedItemColor: AppColors.background,
             unselectedItemColor: AppColors.cardBackground,
             backgroundColor: Colors.transparent,
             type: BottomNavigationBarType.fixed,
