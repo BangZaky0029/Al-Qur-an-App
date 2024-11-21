@@ -39,9 +39,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isNotificationsOn = true;
 
   final List<String> _assetImages = [
-    '/Users/rizkicahya/alquran_app/assets/profile/profile_dog.png',
-    '/Users/rizkicahya/alquran_app/assets/profile/profile_cat.png',
-    '/Users/rizkicahya/alquran_app/assets/profile/profile_goat.png',
+    'assets-1/profile/profile_dog.png',
+    'assets-1/profile/profile_cat.png',
+    'assets-1/profile/profile_goat.png',
   ];
 
   @override
@@ -151,7 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(16.0),
-          height: 300,
+          height: 450,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -187,8 +187,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   itemCount: _assetImages.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 30,
+                    crossAxisSpacing: 50,
                   ),
                   itemBuilder: (context, index) {
                     final assetImage = _assetImages[index];
