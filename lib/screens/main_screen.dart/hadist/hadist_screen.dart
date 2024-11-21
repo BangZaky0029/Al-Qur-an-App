@@ -248,7 +248,7 @@ class _HadistScreenState extends State<HadistScreen> {
                       children: [
                         Center(
                           child: Image.asset(
-                            'assets/images/masjid-2.png',
+                            'assets-1/images/masjid-2.png',
                             width: 500,
                             height: 500,
                             fit: BoxFit.cover,

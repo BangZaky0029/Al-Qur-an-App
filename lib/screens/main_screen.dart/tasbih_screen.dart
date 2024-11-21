@@ -19,10 +19,10 @@ class _TasbihScreenState extends State<TasbihScreen> {
 
   // Daftar gambar tasbih
   final List<String> _images = [
-    '/Users/rizkicahya/alquran_app/assets/images/Subhanallah.png',
-    '/Users/rizkicahya/alquran_app/assets/images/Alhamdulillah.png',
-    '/Users/rizkicahya/alquran_app/assets/images/Allahuakbar.png',
-    '/Users/rizkicahya/alquran_app/assets/images/Lailahaillallah.png'
+    'assets-1/images/Subhanallah.png',
+    'assets-1/images/Alhamdulillah.png',
+    'assets-1/images/Allahuakbar.png',
+    'assets-1/images/Lailahaillallah.png'
   ];
 
   @override
@@ -182,7 +182,7 @@ class _TasbihScreenState extends State<TasbihScreen> {
           // Background Image
           Positioned.fill(
             child: Image.asset(
-              '/Users/rizkicahya/alquran_app/assets/images/background.png',
+              'assets-1/images/background.png',
               fit: BoxFit.cover,
               color: _isDarkMode
                   ? Colors.black.withOpacity(0.5)
