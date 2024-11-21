@@ -1,6 +1,7 @@
 import 'package:alquran_app/screens/main_screen.dart/HOME/homeControl.dart';
-import 'package:alquran_app/screens/main_screen.dart/Kompas/compass_screen.dart';
+// import 'package:alquran_app/screens/main_screen.dart/Kompas/compass_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/MainHome/jadwalSholat.dart';
+import 'package:alquran_app/screens/main_screen.dart/VIDEO/videoScreen.dart';
 import 'package:alquran_app/screens/profile_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/Surah/subSurahScreen.dart';
 import 'package:alquran_app/utils/colors.dart';
@@ -36,7 +37,7 @@ class _HomeViewState extends State<HomeView> {
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => CompassScreen()),
+        MaterialPageRoute(builder: (context) => VideoDakwahPage()),
       );
     }
   }

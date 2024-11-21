@@ -1,7 +1,7 @@
+import 'package:alquran_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'modelVideo.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'dart:io';
 
 class VideoWatchingPage extends StatefulWidget {
   final Video video;
@@ -39,26 +39,19 @@ class _VideoWatchingPageState extends State<VideoWatchingPage> {
       )
       ..loadRequest(
           Uri.parse('https://www.youtube.com/watch?v=${widget.video.id}'));
-
-    // Platform view untuk Android dan iOS
-    if (Platform.isAndroid) {
-      WebView.platform = SurfaceAndroidWebView();
-    } else if (Platform.isIOS) {
-      WebView.platform = WebKitWebView();
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.video.title,
-          style: const TextStyle(
+        title: const Text(
+          "YouTube",
+          style: TextStyle(
             fontSize: 16,
           ),
         ),
-        backgroundColor: const Color(0xFF718355),
+        backgroundColor: AppColors.cardBackground,
       ),
       body: WebViewWidget(controller: _controller),
     );

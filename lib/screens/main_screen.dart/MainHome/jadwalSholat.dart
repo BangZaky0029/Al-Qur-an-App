@@ -1,8 +1,11 @@
 import 'package:alquran_app/providers/auth_provider.dart';
 import 'package:alquran_app/screens/login_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/HOME/home_screen.dart';
-import 'package:alquran_app/screens/main_screen.dart/Kompas/compass_screen.dart';
+import 'package:alquran_app/screens/main_screen.dart/VIDEO/modelVideo.dart';
+// import 'package:alquran_app/screens/main_screen.dart/Kompas/compass_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/VIDEO/videoScreen.dart';
+import 'package:alquran_app/screens/main_screen.dart/VIDEO/videoWatching.dart';
+import 'package:alquran_app/screens/main_screen.dart/VIDEO/youtube_service.dart';
 import 'package:alquran_app/screens/main_screen.dart/hadist/hadist_screen.dart';
 import 'package:alquran_app/screens/main_screen.dart/tasbih_screen.dart';
 import 'package:alquran_app/screens/profile_screen.dart';
@@ -355,6 +358,8 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
           _buildPrayerTimes(),
           const SizedBox(height: 16.0),
           _buildCityInfo(),
+          const SizedBox(height: 16.0),
+          _buildVideoDakwahSection(),
         ],
       ),
     );
@@ -693,6 +698,135 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
                   ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildVideoDakwahSection() {
+    final YouTubeService youTubeService = YouTubeService();
+
+    return Container(
+      margin: const EdgeInsets.only(top: 16.0), // Jarak ke atas (jadwal sholat)
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: AppTheme.cardBackground.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              'Watching Video Dakwah',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.background,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 250, // Tinggi eksplisit untuk menghindari masalah layout
+            child: FutureBuilder<List<dynamic>>(
+              future: youTubeService.fetchVideos(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}',
+                        style: const TextStyle(color: Colors.red)),
+                  );
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'Tidak ada video ditemukan',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  );
+                } else {
+                  final List<Video> videos = snapshot.data!
+                      .map((item) => Video.fromJson(item))
+                      .where((video) => video.id.isNotEmpty)
+                      .toList();
+
+                  return GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // 2 kolom
+                      crossAxisSpacing: 12.0, // Jarak antar kolom
+                      mainAxisSpacing: 16.0, // Jarak antar baris
+                      childAspectRatio: 16 / 9, // Rasio aspek card video
+                    ),
+                    itemCount: videos.length,
+                    itemBuilder: (context, index) {
+                      final video = videos[index];
+                      return GestureDetector(
+                        onTap: () {
+                          // Navigasi ke halaman menonton video
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  VideoWatchingPage(video: video),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              bottom: 8.0), // Jarak antar thumbnail dan label
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius:
+                                    BorderRadius.circular(8), // Sudut membulat
+                                child: Image.network(
+                                  video.thumbnailUrl,
+                                  width: double.infinity, // Lebar penuh
+                                  height:
+                                      100, // Tinggi thumbnail lebih kecil untuk memastikan label lebih terlihat
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.broken_image,
+                                        size: 80);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                  video.title,
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppTheme.textPrimary,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

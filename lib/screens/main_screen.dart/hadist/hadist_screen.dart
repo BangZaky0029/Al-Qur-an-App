@@ -1,11 +1,11 @@
-import 'package:alquran_app/screens/main_screen.dart/Kompas/compass_screen.dart';
-import 'package:alquran_app/screens/main_screen.dart/MainHome/jadwalSholat.dart';
+// import 'package:alquran_app/screens/main_screen.dart/Kompas/compass_screen.dart';
+// import 'package:alquran_app/screens/main_screen.dart/MainHome/jadwalSholat.dart';
 import 'package:alquran_app/utils/colors.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 // import 'package:alquran_app/screens/main_screen.dart/HOME/home_screen.dart';
 // import 'package:alquran_app/screens/main_screen.dart/tasbih_screen.dart';
-import 'package:alquran_app/screens/profile_screen.dart';
+// import 'package:alquran_app/screens/profile_screen.dart';
 import 'package:flutter/services.dart';
 // import 'package:get/get.dart';
 import 'dart:ui';
@@ -199,30 +199,6 @@ class _HadistScreenState extends State<HadistScreen> {
   }
 
   // int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      // _selectedIndex = index;
-    });
-
-    // Navigasi berdasarkan index
-    if (index == 0) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MainScreen()),
-      );
-    } else if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProfileScreen()),
-      );
-    } else if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => CompassScreen()),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
