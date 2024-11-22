@@ -75,15 +75,12 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildBottomNavigationBar(BuildContext context) {
-    // final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    double bottomNavigationBarHeight = (98.0 / screenHeight);
+    final screenWidth = MediaQuery.of(context).size.width;
     final isUserLoggedIn =
         Provider.of<AuthProvider>(context, listen: false)?.isLoggedIn ?? false;
 
     return Container(
-      height: screenHeight *
-          bottomNavigationBarHeight, // Tinggi tetap untuk bottom navigation
+      width: double.infinity,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -94,77 +91,88 @@ class _MainScreenState extends State<MainScreen> {
           end: Alignment.bottomRight,
         ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          // Animated Indicator
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(
-              _pages.length,
-              (index) => GestureDetector(
-                onTap: () => _onItemTapped(index),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  width: _selectedIndex == index ? 65.0 : 65.0,
-                  height: _selectedIndex == index ? 6.0 : 6.0,
-                  decoration: BoxDecoration(
-                    color: _selectedIndex == index
-                        ? AppColors.background
-                        : AppColors.cardBackground.withOpacity(0),
-                    borderRadius: BorderRadius.circular(3.0),
+      child: SafeArea(
+        // Gunakan SafeArea agar bagian bawah tetap aman, terutama pada perangkat dengan notch atau gesture bar
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            // Animated Indicators
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: List.generate(
+                _pages.length,
+                (index) => GestureDetector(
+                  onTap: () => _onItemTapped(index),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    width: _selectedIndex == index ? 60.0 : 60.0,
+                    height: _selectedIndex == index
+                        ? 4.0
+                        : 4.0, // Mengurangi height untuk menghindari overflow
+                    decoration: BoxDecoration(
+                      color: _selectedIndex == index
+                          ? AppColors.background
+                          : AppColors.cardBackground.withOpacity(0),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-
-          // BottomNavigationBar
-          BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.videocam),
-                label: 'Video',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profil',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: AppColors.background,
-            unselectedItemColor: AppColors.cardBackground,
-            backgroundColor: Colors.transparent,
-            type: BottomNavigationBarType.fixed,
-            onTap: (int index) {
-              if (index == 2) {
-                if (isUserLoggedIn) {
-                  // Jika pengguna sudah login, cukup panggil _onItemTapped untuk navigasi
-                  _onItemTapped(index);
+            ), // Mengurangi jarak antara indicator dan BottomNavigationBar
+            BottomNavigationBar(
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.home,
+                    size: screenWidth * 0.07,
+                  ),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.videocam,
+                    size: screenWidth * 0.07,
+                  ),
+                  label: 'Video',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.person,
+                    size: screenWidth * 0.07,
+                  ),
+                  label: 'Profil',
+                ),
+              ],
+              currentIndex: _selectedIndex,
+              selectedItemColor: AppColors.background,
+              unselectedItemColor: const Color.fromARGB(255, 90, 103, 71),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              type: BottomNavigationBarType.fixed,
+              onTap: (int index) {
+                if (index == 2) {
+                  if (isUserLoggedIn) {
+                    _onItemTapped(index);
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    );
+                  }
                 } else {
-                  // Jika pengguna belum login, arahkan ke halaman login
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
+                  _onItemTapped(index);
                 }
-              } else {
-                _onItemTapped(index);
-              }
-            },
-            selectedLabelStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
+              },
+              selectedLabelStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+              unselectedLabelStyle: const TextStyle(
+                fontWeight: FontWeight.normal,
+              ),
             ),
-            unselectedLabelStyle: const TextStyle(
-              fontWeight: FontWeight.normal,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -276,9 +284,8 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
           Column(
             children: [
               _buildTopContainer(userName),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 35.0),
               _buildBottomContainer(),
-              // const SizedBox(height: 6.0),
               _buildVideoDakwahSection(),
             ],
           ),
@@ -336,7 +343,7 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
 
   Widget _buildBottomContainer() {
     return Container(
-      margin: const EdgeInsets.all(30.0),
+      margin: const EdgeInsets.symmetric(horizontal: 30.0),
       padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 10.0),
       decoration: const BoxDecoration(
         gradient: AppTheme.gradientGreen,
@@ -707,155 +714,152 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
   Widget _buildVideoDakwahSection() {
     final YouTubeService youTubeService = YouTubeService();
     double screenHeight = MediaQuery.of(context).size.height;
-    double heightPercentage = (250 / screenHeight);
     double screenWidth = MediaQuery.of(context).size.width;
-    double widthPercentage = (330 / screenWidth);
 
-    return Container(
-      // margin:
-      //     const EdgeInsets.only(bottom: 10.0), // Jarak ke atas (jadwal sholat)
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-            AppColors.cardBackground,
-            AppColors.textPrimary,
-          ],
-          begin: Alignment.topLeft, // Gradien dimulai dari kiri atas
-          end: Alignment.bottomRight, // Gradien berakhir di kanan bawah
-        ),
-        borderRadius: BorderRadius.circular(12),
-        border: const Border.fromBorderSide(
-          BorderSide(
-            color: AppTheme.textPrimary,
-            width: 2.0,
+    return SafeArea(
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 60),
+        padding: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [
+              AppColors.cardBackground,
+              AppColors.textPrimary,
+            ],
+            begin: Alignment.topLeft, // Gradien dimulai dari kiri atas
+            end: Alignment.bottomRight, // Gradien berakhir di kanan bawah
           ),
-        ), // Membuat sudut-sudut membulat
-      ),
-
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              'Watching Video Dakwah',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.background,
+          borderRadius: BorderRadius.circular(12),
+          border: const Border.fromBorderSide(
+            BorderSide(
+              color: AppTheme.textPrimary,
+              width: 2.0,
+            ),
+          ), // Membuat sudut-sudut membulat
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                'Watching Video Dakwah',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.background,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: widthPercentage * screenWidth,
-            height: heightPercentage *
-                screenHeight, // Tinggi eksplisit untuk menghindari masalah layout
-            child: FutureBuilder<List<dynamic>>(
-              future: youTubeService.fetchVideos(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}',
-                        style: const TextStyle(color: Colors.red)),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'Tidak ada video ditemukan',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  );
-                } else {
-                  final List<Video> videos = snapshot.data!
-                      .map((item) => Video.fromJson(item))
-                      .where((video) => video.id.isNotEmpty)
-                      .toList();
+            const SizedBox(height: 10),
+            SizedBox(
+              width: screenWidth *
+                  0.78, // Menggunakan proporsi lebar agar lebih responsif
+              height: screenHeight *
+                  0.2110, // Menggunakan proporsi tinggi agar lebih responsif
+              child: FutureBuilder<List<dynamic>>(
+                future: youTubeService.fetchVideos(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return const Center(
+                      child: Text('Error: \${snapshot.error}',
+                          style: TextStyle(color: Colors.red)),
+                    );
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        'Tidak ada video ditemukan',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  } else {
+                    final List<Video> videos = snapshot.data!
+                        .map((item) => Video.fromJson(item))
+                        .where((video) => video.id.isNotEmpty)
+                        .toList();
 
-                  return GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // 2 kolom
-                      crossAxisSpacing: 10.0, // Jarak antar kolom
-                      mainAxisSpacing: 20.0, // Jarak antar baris
-                      childAspectRatio: 16 / 16, // Rasio aspek card video
-                    ),
-                    itemCount: videos.length,
-                    itemBuilder: (context, index) {
-                      final video = videos[index];
-                      return GestureDetector(
-                        onTap: () {
-                          // Navigasi ke halaman menonton video
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  VideoWatchingPage(video: video),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          // margin: const EdgeInsets.only(
-                          //     bottom: 30.0), // Jarak antar thumbnail dan label
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: AppColors.cardBackground,
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  offset: Offset(2, 2),
-                                  blurRadius: 1.0,
-                                )
-                              ]),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                // Sudut membulat
-                                child: Image.network(
-                                  video.thumbnailUrl,
-                                  width: double.infinity, // Lebar penuh
-                                  height:
-                                      110, // Tinggi thumbnail lebih kecil untuk memastikan label lebih terlihat
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(Icons.broken_image,
-                                        size: 80);
-                                  },
-                                ),
+                    return GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // 2 kolom
+                        crossAxisSpacing: 15.0, // Jarak antar kolom
+                        mainAxisSpacing: 35.0, // Jarak antar baris
+                        childAspectRatio: 20 / 20, // Rasio aspek card video
+                      ),
+                      itemCount: videos.length,
+                      itemBuilder: (context, index) {
+                        final video = videos[index];
+                        return GestureDetector(
+                          onTap: () {
+                            // Navigasi ke halaman menonton video
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    VideoWatchingPage(video: video),
                               ),
-                              const SizedBox(height: 10),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text(
-                                  video.title,
-                                  textAlign: TextAlign.left,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppTheme.textPrimary,
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: AppColors.cardBackground,
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    offset: Offset(2, 2),
+                                    blurRadius: 1.0,
+                                  )
+                                ]),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  // Sudut membulat
+                                  child: Image.network(
+                                    video.thumbnailUrl,
+                                    width: double.infinity, // Lebar penuh
+                                    height: screenHeight *
+                                        0.12, // Tinggi thumbnail lebih kecil untuk memastikan label lebih terlihat
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(Icons.broken_image,
+                                          size: 50);
+                                    },
                                   ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 10),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Text(
+                                    video.title,
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppTheme.textPrimary,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
