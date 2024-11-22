@@ -76,6 +76,8 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildBottomNavigationBar(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     final isUserLoggedIn =
         Provider.of<AuthProvider>(context, listen: false)?.isLoggedIn ?? false;
 
@@ -106,10 +108,13 @@ class _MainScreenState extends State<MainScreen> {
                   onTap: () => _onItemTapped(index),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
-                    width: _selectedIndex == index ? 60.0 : 60.0,
+                    width: _selectedIndex == index
+                        ? screenWidth * 0.15
+                        : screenWidth * 0.15, // 15% dari lebar layar
                     height: _selectedIndex == index
-                        ? 4.0
-                        : 4.0, // Mengurangi height untuk menghindari overflow
+                        ? screenHeight * 0.004
+                        : screenHeight *
+                            0.004, // 0.3% dari tinggi layar // Mengurangi height untuk menghindari overflow
                     decoration: BoxDecoration(
                       color: _selectedIndex == index
                           ? AppColors.background
@@ -718,8 +723,9 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
 
     return SafeArea(
       child: Container(
-        margin: const EdgeInsets.only(bottom: 60),
-        padding: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.only(
+            top: 8.0, left: 16.0, right: 16.0, bottom: 16),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [
@@ -824,7 +830,7 @@ class _JadwalSholatScreenState extends State<JadwalSholatScreen> {
                                     video.thumbnailUrl,
                                     width: double.infinity, // Lebar penuh
                                     height: screenHeight *
-                                        0.12, // Tinggi thumbnail lebih kecil untuk memastikan label lebih terlihat
+                                        0.10, // Tinggi thumbnail lebih kecil untuk memastikan label lebih terlihat
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return const Icon(Icons.broken_image,
